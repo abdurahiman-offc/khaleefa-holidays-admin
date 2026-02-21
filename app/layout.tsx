@@ -4,7 +4,7 @@ import "./globals.css";
 import Navbar from "@/components/Navbar";
 import SmoothScroll from "@/components/SmoothScroll";
 import WhatsAppWidget from "@/components/WhatsAppWidget";
-import AirplaneScroll from "@/components/AirplaneScroll";
+
 
 import { Playfair_Display, Roboto, Yomogi } from "next/font/google";
 
@@ -44,7 +44,7 @@ export default function RootLayout({
           <Navbar />
           {children}
           <WhatsAppWidget />
-          <AirplaneScroll />
+
         </SmoothScroll>
       </body>
     </html>
