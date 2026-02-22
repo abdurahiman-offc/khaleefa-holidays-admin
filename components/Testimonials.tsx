@@ -34,7 +34,7 @@ const testimonials = [
 
 export default function Testimonials() {
     return (
-        <section id="reviews" className="pt-[100px] pb-[100px] bg-[#151794] relative overflow-hidden">
+        <section id="reviews" className="pt-[100px] pb-7 md:pb-[100px] bg-[#151794] relative overflow-hidden">
             {/* Scattered Small White Shapes */}
             <ScatteredShapes />
 

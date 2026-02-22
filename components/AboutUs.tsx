@@ -5,7 +5,7 @@ import Image from "next/image";
 import ScatteredShapes from "./ScatteredShapes";
 export default function AboutUs() {
     return (
-        <section id="about-us" className="pt-[100px] pb-[100px] bg-[#151794] overflow-hidden relative">
+        <section id="about-us" className="pt-[100px] pb-7 md:pb-[100px] bg-[#151794] overflow-hidden relative">
             {/* Scattered Small White Shapes */}
             <ScatteredShapes />
 

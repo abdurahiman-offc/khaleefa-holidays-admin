@@ -53,7 +53,7 @@ export default function ContactUs() {
     const [pnr] = useState(() => "KH" + Math.floor(Math.random() * 90000 + 10000));
 
     return (
-        <section id="contact" className="pt-[100px] pb-[150px] bg-[#151794] relative overflow-hidden">
+        <section id="contact" className="pt-[100px] pb-11 md:pb-[150px] bg-[#151794] relative overflow-hidden">
             <ScatteredShapes />
 
             <div className="container mx-auto px-4 relative z-10">
@@ -143,54 +143,54 @@ export default function ContactUs() {
                                     <p className="text-gray-600">We&apos;ve received your message and will get back to you shortly.</p>
                                 </div>
                             ) : (
-                            <form id="ticket-form" onSubmit={handleSubmit} className="space-y-4 relative z-10">
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <form id="ticket-form" onSubmit={handleSubmit} className="space-y-4 relative z-10">
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                        <div className="bg-gray-50 border-2 border-[#151794] rounded-xl p-3 focus-within:ring-1 focus-within:ring-[#151794] focus-within:bg-white transition-all shadow-sm group">
+                                            <label className="flex items-center gap-2 text-[11px] font-bold text-gray-500 uppercase tracking-widest mb-1 group-focus-within:text-[#151794]">
+                                                <User size={14} /> Name
+                                            </label>
+                                            <input
+                                                type="text"
+                                                name="name"
+                                                value={formData.name}
+                                                onChange={handleChange}
+                                                required
+                                                className="w-full text-lg font-bold text-gray-900 focus:outline-none bg-transparent placeholder-gray-400 uppercase"
+                                                placeholder="JANE DOE"
+                                            />
+                                        </div>
+                                        <div className={`bg-gray-50 border-2 rounded-xl p-3 focus-within:ring-1 focus-within:ring-[#151794] focus-within:bg-white transition-all shadow-sm group ${phoneError ? "border-red-400" : "border-[#151794]"}`}>
+                                            <label className="flex items-center gap-2 text-[11px] font-bold text-gray-500 uppercase tracking-widest mb-1 group-focus-within:text-[#151794]">
+                                                <Phone size={14} /> Phone
+                                            </label>
+                                            <input
+                                                type="tel"
+                                                name="phone"
+                                                value={formData.phone}
+                                                onChange={handleChange}
+                                                required
+                                                className="w-full text-lg font-bold text-gray-900 focus:outline-none bg-transparent placeholder-gray-400 uppercase"
+                                                placeholder="+91 00000 00000"
+                                            />
+                                            {phoneError && <p className="text-red-500 text-xs mt-1">{phoneError}</p>}
+                                        </div>
+                                    </div>
+
                                     <div className="bg-gray-50 border-2 border-[#151794] rounded-xl p-3 focus-within:ring-1 focus-within:ring-[#151794] focus-within:bg-white transition-all shadow-sm group">
                                         <label className="flex items-center gap-2 text-[11px] font-bold text-gray-500 uppercase tracking-widest mb-1 group-focus-within:text-[#151794]">
-                                            <User size={14} /> Name
+                                            <MessageSquare size={14} /> Message
                                         </label>
-                                        <input
-                                            type="text"
-                                            name="name"
-                                            value={formData.name}
+                                        <textarea
+                                            name="message"
+                                            value={formData.message}
                                             onChange={handleChange}
                                             required
-                                            className="w-full text-lg font-bold text-gray-900 focus:outline-none bg-transparent placeholder-gray-400 uppercase"
-                                            placeholder="JANE DOE"
+                                            rows={3}
+                                            className="w-full text-lg font-bold text-gray-900 focus:outline-none bg-transparent placeholder-gray-400 resize-none uppercase"
+                                            placeholder="ANY SPECIAL REQUESTS?"
                                         />
                                     </div>
-                                    <div className={`bg-gray-50 border-2 rounded-xl p-3 focus-within:ring-1 focus-within:ring-[#151794] focus-within:bg-white transition-all shadow-sm group ${phoneError ? "border-red-400" : "border-[#151794]"}`}>
-                                        <label className="flex items-center gap-2 text-[11px] font-bold text-gray-500 uppercase tracking-widest mb-1 group-focus-within:text-[#151794]">
-                                            <Phone size={14} /> Phone
-                                        </label>
-                                        <input
-                                            type="tel"
-                                            name="phone"
-                                            value={formData.phone}
-                                            onChange={handleChange}
-                                            required
-                                            className="w-full text-lg font-bold text-gray-900 focus:outline-none bg-transparent placeholder-gray-400 uppercase"
-                                            placeholder="+91 00000 00000"
-                                        />
-                                        {phoneError && <p className="text-red-500 text-xs mt-1">{phoneError}</p>}
-                                    </div>
-                                </div>
-
-                                <div className="bg-gray-50 border-2 border-[#151794] rounded-xl p-3 focus-within:ring-1 focus-within:ring-[#151794] focus-within:bg-white transition-all shadow-sm group">
-                                    <label className="flex items-center gap-2 text-[11px] font-bold text-gray-500 uppercase tracking-widest mb-1 group-focus-within:text-[#151794]">
-                                        <MessageSquare size={14} /> Message
-                                    </label>
-                                    <textarea
-                                        name="message"
-                                        value={formData.message}
-                                        onChange={handleChange}
-                                        required
-                                        rows={3}
-                                        className="w-full text-lg font-bold text-gray-900 focus:outline-none bg-transparent placeholder-gray-400 resize-none uppercase"
-                                        placeholder="ANY SPECIAL REQUESTS?"
-                                    />
-                                </div>
-                            </form>
+                                </form>
                             )}
 
                         </div>
@@ -261,13 +261,13 @@ export default function ContactUs() {
                                 </div>
 
                                 {!submitted && (
-                                <button
-                                    type="submit"
-                                    form="ticket-form"
-                                    className="w-full bg-[#151794] text-white py-4 rounded-xl font-bold text-sm uppercase tracking-[0.2em] hover:bg-[#1a1cba] hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300 flex justify-center items-center gap-2 group"
-                                >
-                                    Confirm <Plane size={16} className="transform group-hover:translate-x-1 transition-transform" />
-                                </button>
+                                    <button
+                                        type="submit"
+                                        form="ticket-form"
+                                        className="w-full bg-[#151794] text-white py-4 rounded-xl font-bold text-sm uppercase tracking-[0.2em] hover:bg-[#1a1cba] hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300 flex justify-center items-center gap-2 group"
+                                    >
+                                        Confirm <Plane size={16} className="transform group-hover:translate-x-1 transition-transform" />
+                                    </button>
                                 )}
                             </div>
                         </div>

@@ -54,7 +54,7 @@ export default function Destinations() {
     if (destinations.length === 0) return null;
 
     return (
-        <section id="destinations" className="pt-[100px] pb-[100px] bg-[#151794] relative overflow-hidden">
+        <section id="destinations" className="pt-[100px] pb-7 md:pb-[100px] bg-[#151794] relative overflow-hidden">
             {/* Scattered Small White Shapes */}
             <ScatteredShapes />
 
@@ -71,27 +71,77 @@ export default function Destinations() {
                     </h2>
                 </motion.div>
 
-                {destinations.length > 4 ? (
-                    <div className="relative group/carousel px-10">
-                        {/* Scroll Buttons */}
-                        <button
-                            onClick={() => carouselRef.current?.scrollBy({ left: -400, behavior: 'smooth' })}
-                            className="absolute left-0 top-1/2 -translate-y-1/2 z-20 bg-white/90 backdrop-blur-md p-3 rounded-full shadow-lg opacity-0 group-hover/carousel:opacity-100 transition-opacity disabled:opacity-0 hover:bg-white hover:scale-110 active:scale-95 text-[#151794]"
-                        >
-                            <ChevronLeft size={24} />
-                        </button>
-                        <button
-                            onClick={() => carouselRef.current?.scrollBy({ left: 400, behavior: 'smooth' })}
-                            className="absolute right-0 top-1/2 -translate-y-1/2 z-20 bg-white/90 backdrop-blur-md p-3 rounded-full shadow-lg opacity-0 group-hover/carousel:opacity-100 transition-opacity disabled:opacity-0 hover:bg-white hover:scale-110 active:scale-95 text-[#151794]"
-                        >
-                            <ChevronRight size={24} />
-                        </button>
+                {/* Desktop View: Conditional Carousel/Grid */}
+                <div className="hidden md:block">
+                    {destinations.length > 4 ? (
+                        <div className="relative group/carousel px-10">
+                            {/* Scroll Buttons */}
+                            <button
+                                onClick={() => carouselRef.current?.scrollBy({ left: -400, behavior: 'smooth' })}
+                                className="absolute left-0 top-1/2 -translate-y-1/2 z-20 bg-white/90 backdrop-blur-md p-3 rounded-full shadow-lg opacity-0 group-hover/carousel:opacity-100 transition-opacity disabled:opacity-0 hover:bg-white hover:scale-110 active:scale-95 text-[#151794]"
+                            >
+                                <ChevronLeft size={24} />
+                            </button>
+                            <button
+                                onClick={() => carouselRef.current?.scrollBy({ left: 400, behavior: 'smooth' })}
+                                className="absolute right-0 top-1/2 -translate-y-1/2 z-20 bg-white/90 backdrop-blur-md p-3 rounded-full shadow-lg opacity-0 group-hover/carousel:opacity-100 transition-opacity disabled:opacity-0 hover:bg-white hover:scale-110 active:scale-95 text-[#151794]"
+                            >
+                                <ChevronRight size={24} />
+                            </button>
 
-                        <div
-                            ref={carouselRef}
-                            className="flex overflow-x-auto gap-6 md:gap-8 pb-8 pt-4 snap-x snap-mandatory scrollbar-hide px-4"
-                            style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
-                        >
+                            <div
+                                ref={carouselRef}
+                                className="flex overflow-x-auto gap-8 pb-8 pt-4 snap-x snap-mandatory scrollbar-hide px-4"
+                                style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+                            >
+                                {destinations.map((place, index) => (
+                                    <motion.div
+                                        key={place._id}
+                                        initial={{ opacity: 0, scale: 0.95 }}
+                                        whileHover={{ y: -5, scale: 1.02, zIndex: 10 }}
+                                        whileInView={{ opacity: 1, scale: 1 }}
+                                        viewport={{ once: true }}
+                                        transition={{ duration: 0.4, delay: index * 0.05 }}
+                                        onClick={() => setSelectedId(place._id)}
+                                        className="flex flex-col bg-white rounded-3xl overflow-hidden shadow-md border-[3px] border-slate-100 group hover:shadow-2xl transition-all duration-300 flex-shrink-0 snap-center cursor-pointer w-[350px]"
+                                    >
+                                        <div className="relative aspect-[4/3] overflow-hidden">
+                                            <Image
+                                                src={place.image}
+                                                alt={place.name}
+                                                fill
+                                                className="object-cover transition-transform duration-700 group-hover:scale-110"
+                                            />
+                                            <div className="absolute inset-0 bg-black/10 group-hover:bg-black/0 transition-colors duration-300" />
+                                            {place.popularDestination && (
+                                                <div className="absolute top-4 right-4 bg-red-500/90 text-white px-3 py-1 rounded text-xs font-bold tracking-wider backdrop-blur-md shadow-sm z-10">
+                                                    POPULAR
+                                                </div>
+                                            )}
+                                        </div>
+
+                                        <div className="p-5 flex flex-col items-start justify-between gap-4 bg-white">
+                                            <div className="min-w-0 w-full">
+                                                <h3 className="text-bookease-navy font-bold text-xl md:text-2xl line-clamp-1 mb-1">
+                                                    {place.name}
+                                                </h3>
+                                                <p className="text-slate-500 text-base font-semibold">
+                                                    {place.price}
+                                                </p>
+                                            </div>
+
+                                            <button
+                                                className="w-full bg-[#151794] text-white px-6 py-3 rounded-full text-sm font-bold uppercase tracking-wider cursor-pointer whitespace-nowrap border-2 border-[#151794] transition-all duration-200 transform hover:-translate-y-[2px] active:translate-y-[4px] shadow-[0_4px_0_#0a0b5c,0_10px_15px_rgba(0,0,0,0.3)] active:shadow-[0_0px_0_#0a0b5c,0_0px_0px_rgba(0,0,0,0)]"
+                                            >
+                                                View Details
+                                            </button>
+                                        </div>
+                                    </motion.div>
+                                ))}
+                            </div>
+                        </div>
+                    ) : (
+                        <div className="flex flex-wrap justify-center gap-8 max-w-[1400px] mx-auto">
                             {destinations.map((place, index) => (
                                 <motion.div
                                     key={place._id}
@@ -101,8 +151,7 @@ export default function Destinations() {
                                     viewport={{ once: true }}
                                     transition={{ duration: 0.4, delay: index * 0.05 }}
                                     onClick={() => setSelectedId(place._id)}
-                                    className="flex flex-col bg-white rounded-3xl overflow-hidden shadow-md border-[3px] border-slate-100 group hover:shadow-2xl transition-all duration-300 w-full sm:w-[calc(50%-0.75rem)] md:w-[calc(50%-1rem)] lg:w-[calc(33.333%-1.333rem)] xl:w-[calc(33.333%-1.333rem)] flex-shrink-0 snap-center cursor-pointer"
-                                    style={{ minWidth: "min(100%, 350px)" }}
+                                    className="flex flex-col bg-white rounded-3xl overflow-hidden shadow-md border-[3px] border-slate-100 group hover:shadow-2xl transition-all duration-300 w-full sm:w-[calc(50%-1rem)] md:w-[calc(50%-1rem)] lg:w-[calc(33.333%-1.333rem)] xl:w-[calc(33.333%-1.333rem)] flex-shrink-0 cursor-pointer"
                                 >
                                     <div className="relative aspect-[4/3] overflow-hidden">
                                         <Image
@@ -138,47 +187,51 @@ export default function Destinations() {
                                 </motion.div>
                             ))}
                         </div>
-                    </div>
-                ) : (
-                    <div className="flex flex-wrap justify-center gap-6 md:gap-8 max-w-[1400px] mx-auto">
+                    )}
+                </div>
+
+                {/* Mobile View: Always Carousel with smaller cards */}
+                <div className="md:hidden">
+                    <div
+                        className="flex overflow-x-auto gap-4 pb-8 snap-x snap-mandatory scrollbar-hide px-4 justify-start sm:justify-center"
+                        style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+                    >
                         {destinations.map((place, index) => (
                             <motion.div
                                 key={place._id}
-                                initial={{ opacity: 0, scale: 0.95 }}
-                                whileHover={{ y: -5, scale: 1.02, zIndex: 10 }}
-                                whileInView={{ opacity: 1, scale: 1 }}
+                                initial={{ opacity: 0, x: 20 }}
+                                whileInView={{ opacity: 1, x: 0 }}
                                 viewport={{ once: true }}
-                                transition={{ duration: 0.4, delay: index * 0.05 }}
+                                transition={{ duration: 0.5, delay: index * 0.1 }}
                                 onClick={() => setSelectedId(place._id)}
-                                className="flex flex-col bg-white rounded-3xl overflow-hidden shadow-md border-[3px] border-slate-100 group hover:shadow-2xl transition-all duration-300 w-full sm:w-[calc(50%-0.75rem)] md:w-[calc(50%-1rem)] lg:w-[calc(33.333%-1.333rem)] xl:w-[calc(33.333%-1.333rem)] flex-shrink-0 cursor-pointer"
+                                className="flex flex-col bg-white rounded-3xl overflow-hidden shadow-lg border-[2px] border-slate-100 flex-shrink-0 snap-center w-[72vw]"
                             >
                                 <div className="relative aspect-[4/3] overflow-hidden">
                                     <Image
                                         src={place.image}
                                         alt={place.name}
                                         fill
-                                        className="object-cover transition-transform duration-700 group-hover:scale-110"
+                                        className="object-cover"
                                     />
-                                    <div className="absolute inset-0 bg-black/10 group-hover:bg-black/0 transition-colors duration-300" />
                                     {place.popularDestination && (
-                                        <div className="absolute top-4 right-4 bg-red-500/90 text-white px-3 py-1 rounded text-xs font-bold tracking-wider backdrop-blur-md shadow-sm z-10">
+                                        <div className="absolute top-3 right-3 bg-red-500/90 text-white px-2 py-0.5 rounded text-[10px] font-bold tracking-wider backdrop-blur-md shadow-sm z-10">
                                             POPULAR
                                         </div>
                                     )}
                                 </div>
 
-                                <div className="p-5 flex flex-col items-start justify-between gap-4 bg-white">
-                                    <div className="min-w-0 w-full">
-                                        <h3 className="text-bookease-navy font-bold text-xl md:text-2xl line-clamp-1 mb-1">
+                                <div className="p-4 flex flex-col items-center justify-between gap-3 bg-white">
+                                    <div className="min-w-0 w-full text-center">
+                                        <h3 className="text-bookease-navy font-bold text-lg line-clamp-1 mb-0.5">
                                             {place.name}
                                         </h3>
-                                        <p className="text-slate-500 text-base font-semibold">
+                                        <p className="text-slate-500 text-sm font-semibold mb-2">
                                             {place.price}
                                         </p>
                                     </div>
 
                                     <button
-                                        className="w-full bg-[#151794] text-white px-6 py-3 rounded-full text-sm font-bold uppercase tracking-wider cursor-pointer whitespace-nowrap border-2 border-[#151794] transition-all duration-200 transform hover:-translate-y-[2px] active:translate-y-[4px] shadow-[0_4px_0_#0a0b5c,0_10px_15px_rgba(0,0,0,0.3)] active:shadow-[0_0px_0_#0a0b5c,0_0px_0px_rgba(0,0,0,0)]"
+                                        className="w-full bg-[#151794] text-white px-4 py-2.5 rounded-full text-[11px] font-bold uppercase tracking-wider shadow-sm active:translate-y-1 transition-all"
                                     >
                                         View Details
                                     </button>
@@ -186,7 +239,7 @@ export default function Destinations() {
                             </motion.div>
                         ))}
                     </div>
-                )}
+                </div>
             </div>
 
             {/* Modal */}
@@ -257,7 +310,7 @@ function DestinationModalContent({ place, onClose }: { place: Destination, onClo
             <div className="hidden md:block absolute left-[66%] -bottom-[20px] w-10 h-10 bg-black/60 rounded-full z-20 pointer-events-none" />
 
             {/* Left Section: Main Ticket Body */}
-            <div className="w-full md:w-2/3 p-6 md:p-10 flex flex-col border-b-2 md:border-b-0 md:border-r-2 border-dashed border-slate-200 overflow-y-auto scrollbar-hide">
+            <div className="w-full md:w-2/3 p-4 md:p-10 flex flex-col border-b-2 md:border-b-0 md:border-r-2 border-dashed border-slate-200 overflow-y-auto scrollbar-hide">
                 {/* Header */}
                 <div className="flex justify-between items-start mb-8 border-b-2 border-slate-100 pb-6 shrink-0">
                     <div className="flex items-center gap-4">
@@ -316,7 +369,7 @@ function DestinationModalContent({ place, onClose }: { place: Destination, onClo
             </div>
 
             {/* Right Section: Ticket Stub / Enquiry */}
-            <div className="w-full md:w-1/3 bg-slate-50 p-8 md:p-10 flex flex-col overflow-y-auto scrollbar-hide">
+            <div className="w-full md:w-1/3 bg-slate-50 p-6 md:p-10 flex flex-col overflow-y-auto scrollbar-hide">
                 <div className="mb-8">
                     <p className="text-[10px] font-black text-slate-400 tracking-[0.2em] uppercase mb-1">Boarding Pass ID</p>
                     <h4 className="font-black text-xl text-[#151794] uppercase tracking-tighter break-words">

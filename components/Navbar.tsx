@@ -11,15 +11,27 @@ export default function Navbar() {
     const pathname = usePathname();
     const [isScrolled, setIsScrolled] = useState(false);
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+    const [isVisible, setIsVisible] = useState(true);
+    const [lastScrollY, setLastScrollY] = useState(0);
+    const [isPastHero, setIsPastHero] = useState(false);
 
     useEffect(() => {
         const handleScroll = () => {
-            setIsScrolled(window.scrollY > 50);
+            const currentScrollY = window.scrollY;
+            setIsScrolled(currentScrollY > 50);
+            setIsPastHero(currentScrollY > 20); // Hide almost immediately when scrolling starts
+
+            if (currentScrollY > lastScrollY && currentScrollY > 100) {
+                setIsVisible(false);
+            } else if (currentScrollY < lastScrollY) {
+                setIsVisible(true);
+            }
+            setLastScrollY(currentScrollY);
         };
 
-        window.addEventListener("scroll", handleScroll);
+        window.addEventListener("scroll", handleScroll, { passive: true });
         return () => window.removeEventListener("scroll", handleScroll);
-    }, []);
+    }, [lastScrollY]);
 
     if (pathname.startsWith("/admin")) return null;
 
@@ -39,17 +51,28 @@ export default function Navbar() {
 
     return (
         <nav
-            className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${isScrolled
-                ? "bg-white/80  backdrop-blur-md py-4 shadow-sm"
+            className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${isScrolled
+                ? "md:bg-white/80 md:backdrop-blur-md py-4 md:shadow-sm"
                 : "bg-transparent py-6"
-                }`}
+                } ${!isVisible ? "-translate-y-full opacity-0 md:translate-y-0 md:opacity-100" : "translate-y-0 opacity-100"}`}
         >
             <div className="container mx-auto px-6 flex items-center justify-between">
                 {/* Logo */}
                 <Link href="/" className="flex items-center">
-                    <div className="relative w-48 h-12 md:w-56 md:h-14">
+                    {/* Desktop Logo */}
+                    <div className="hidden md:block relative w-48 h-12 md:w-56 md:h-14">
                         <Image
                             src={isScrolled ? "/images/mainlogo.png" : "/images/mainlogo2.png"}
+                            alt="Khaleefa Holidays Logo"
+                            fill
+                            className="object-contain object-left"
+                            priority
+                        />
+                    </div>
+                    {/* Mobile Logo */}
+                    <div className={`block md:hidden relative w-64 h-20 transition-all duration-500 ${isPastHero ? "opacity-0 scale-95 pointer-events-none" : "opacity-100 scale-100"}`}>
+                        <Image
+                            src="/images/mobilenav.png"
                             alt="Khaleefa Holidays Logo"
                             fill
                             className="object-contain object-left"
@@ -82,10 +105,28 @@ export default function Navbar() {
 
                 {/* Mobile Menu Button */}
                 <button
-                    className="md:hidden bg-transparent backdrop-blur-md border border-gray-200/50 hover:bg-black/5 p-2 rounded-lg transition-all"
+                    className="md:hidden relative z-50 w-12 h-12 flex flex-col items-center justify-center gap-1.5 transition-all outline-none group"
                     onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+                    aria-label="Toggle Menu"
                 >
-                    {isMobileMenuOpen ? <X className={isScrolled ? "text-bookease-navy" : "text-white"} /> : <Menu className={isScrolled ? "text-bookease-navy" : "text-white"} />}
+                    {/* Round Background */}
+                    <div className={`absolute inset-0 rounded-full border-2 border-white transition-all duration-300 ${isScrolled || isMobileMenuOpen ? "bg-[#151794] shadow-lg scale-100" : "bg-transparent scale-0"}`} />
+
+                    <motion.span
+                        animate={isMobileMenuOpen ? { rotate: 45, y: 8 } : { rotate: 0, y: 0 }}
+                        transition={{ duration: 0.3, ease: "easeInOut" }}
+                        className="w-6 h-0.5 rounded-full bg-white relative z-10"
+                    />
+                    <motion.span
+                        animate={isMobileMenuOpen ? { opacity: 0, x: -10 } : { opacity: 1, x: 0 }}
+                        transition={{ duration: 0.2 }}
+                        className="w-6 h-0.5 rounded-full bg-white relative z-10"
+                    />
+                    <motion.span
+                        animate={isMobileMenuOpen ? { rotate: -45, y: -8 } : { rotate: 0, y: 0 }}
+                        transition={{ duration: 0.3, ease: "easeInOut" }}
+                        className="w-6 h-0.5 rounded-full bg-white relative z-10"
+                    />
                 </button>
             </div>
 
@@ -96,14 +137,14 @@ export default function Navbar() {
                         initial={{ opacity: 0, y: -20 }}
                         animate={{ opacity: 1, y: 0 }}
                         exit={{ opacity: 0, y: -20 }}
-                        className="absolute top-full left-0 right-0 bg-white  shadow-lg p-6 md:hidden flex flex-col gap-4"
+                        className="absolute top-full left-0 right-0 bg-[#151794]/95 backdrop-blur-xl shadow-lg p-6 md:hidden flex flex-col gap-4 border-t border-white/10"
                     >
                         {navLinks.map((link) => (
                             <button
                                 key={link.name}
                                 type="button"
                                 onClick={() => scrollToSection(link.id)}
-                                className="text-lg font-medium text-slate-800 text-left w-full py-2"
+                                className="text-lg font-bold text-white text-left w-full py-4 px-4 hover:bg-white/10 rounded-2xl transition-all active:scale-[0.98]"
                             >
                                 {link.name}
                             </button>
@@ -111,7 +152,7 @@ export default function Navbar() {
                         <button
                             type="button"
                             onClick={() => scrollToSection("contact")}
-                            className="text-lg font-medium text-slate-800 text-left w-full py-2 mt-2 border-t border-gray-100 pt-4"
+                            className="text-lg font-bold text-white text-left w-full py-4 px-4 mt-2 border-t border-white/10 hover:bg-white/10 rounded-2xl transition-all active:scale-[0.98]"
                         >
                             Contact Us
                         </button>

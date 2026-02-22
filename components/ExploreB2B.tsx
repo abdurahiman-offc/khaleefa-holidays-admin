@@ -66,7 +66,7 @@ export default function ExploreB2B() {
     };
 
     return (
-        <section id="b2b" className="pt-[100px] pb-[100px] bg-[#151794] relative overflow-hidden">
+        <section id="b2b" className="pt-[100px] pb-7 md:pb-[100px] bg-[#151794] relative overflow-hidden">
             {/* Background Effect */}
             <ScatteredShapes />
 
@@ -101,17 +101,17 @@ export default function ExploreB2B() {
                                 </div>
                             </div>
 
-                            <div className="w-full lg:w-3/4 p-10 lg:p-20 relative z-10 text-center lg:text-left transition-opacity duration-500 group-hover:opacity-0">
+                            <div className="w-full lg:w-3/4 p-8 lg:p-20 relative z-10 text-center lg:text-left transition-opacity duration-500 group-hover:opacity-0">
                                 <motion.div
                                     initial={{ opacity: 0, x: -20 }}
                                     whileInView={{ opacity: 1, x: 0 }}
                                     viewport={{ once: true }}
                                     transition={{ duration: 0.6 }}
                                 >
-                                    <h2 className={`text-[42px] font-normal text-white mb-6 leading-tight ${satisfy.className}`}>
+                                    <h2 className={`text-4xl md:text-[42px] font-normal text-white mb-4 md:mb-6 leading-tight ${satisfy.className}`}>
                                         Let's join hand together
                                     </h2>
-                                    <p className={`text-[46px] text-white/90 mb-0 leading-relaxed max-w-2xl font-medium ${dosis.className}`}>
+                                    <p className={`text-2xl md:text-3xl lg:text-[46px] text-white/90 mb-0 leading-relaxed max-w-2xl font-medium ${dosis.className}`}>
                                         Explore B2B opportunity with Khaleefa Holiday. Join our exclusive network of travel partners.
                                     </p>
                                 </motion.div>
@@ -170,60 +170,60 @@ export default function ExploreB2B() {
                                         <p className="text-gray-600 text-sm">We&apos;ve received your enquiry and will get back to you shortly.</p>
                                     </div>
                                 ) : (
-                                <form onSubmit={handleSubmit} className="space-y-4">
-                                    <div className="bg-white border-2 border-gray-100 rounded-xl p-3 focus-within:ring-1 focus-within:ring-[#151794] focus-within:border-[#151794] transition-all shadow-sm group">
-                                        <label className="flex items-center gap-2 text-[11px] font-bold text-gray-500 uppercase tracking-widest mb-1 group-focus-within:text-[#151794]">
-                                            <User size={14} /> Name
-                                        </label>
-                                        <input
-                                            type="text"
-                                            name="name"
-                                            value={formData.name}
-                                            onChange={handleChange}
-                                            required
-                                            className="w-full text-base font-bold text-gray-900 focus:outline-none bg-transparent placeholder-gray-400"
-                                            placeholder="Your name or company"
-                                        />
-                                    </div>
+                                    <form onSubmit={handleSubmit} className="space-y-4">
+                                        <div className="bg-white border-2 border-gray-100 rounded-xl p-3 focus-within:ring-1 focus-within:ring-[#151794] focus-within:border-[#151794] transition-all shadow-sm group">
+                                            <label className="flex items-center gap-2 text-[11px] font-bold text-gray-500 uppercase tracking-widest mb-1 group-focus-within:text-[#151794]">
+                                                <User size={14} /> Name
+                                            </label>
+                                            <input
+                                                type="text"
+                                                name="name"
+                                                value={formData.name}
+                                                onChange={handleChange}
+                                                required
+                                                className="w-full text-base font-bold text-gray-900 focus:outline-none bg-transparent placeholder-gray-400"
+                                                placeholder="Your name or company"
+                                            />
+                                        </div>
 
-                                    <div className={`bg-white border-2 rounded-xl p-3 focus-within:ring-1 focus-within:ring-[#151794] transition-all shadow-sm group ${phoneError ? "border-red-400 focus-within:border-red-400" : "border-gray-100 focus-within:border-[#151794]"}`}>
-                                        <label className="flex items-center gap-2 text-[11px] font-bold text-gray-500 uppercase tracking-widest mb-1 group-focus-within:text-[#151794]">
-                                            <Phone size={14} /> Phone
-                                        </label>
-                                        <input
-                                            type="tel"
-                                            name="phone"
-                                            value={formData.phone}
-                                            onChange={handleChange}
-                                            required
-                                            className="w-full text-base font-bold text-gray-900 focus:outline-none bg-transparent placeholder-gray-400"
-                                            placeholder="+91 00000 00000"
-                                        />
-                                        {phoneError && <p className="text-red-500 text-xs mt-1">{phoneError}</p>}
-                                    </div>
+                                        <div className={`bg-white border-2 rounded-xl p-3 focus-within:ring-1 focus-within:ring-[#151794] transition-all shadow-sm group ${phoneError ? "border-red-400 focus-within:border-red-400" : "border-gray-100 focus-within:border-[#151794]"}`}>
+                                            <label className="flex items-center gap-2 text-[11px] font-bold text-gray-500 uppercase tracking-widest mb-1 group-focus-within:text-[#151794]">
+                                                <Phone size={14} /> Phone
+                                            </label>
+                                            <input
+                                                type="tel"
+                                                name="phone"
+                                                value={formData.phone}
+                                                onChange={handleChange}
+                                                required
+                                                className="w-full text-base font-bold text-gray-900 focus:outline-none bg-transparent placeholder-gray-400"
+                                                placeholder="+91 00000 00000"
+                                            />
+                                            {phoneError && <p className="text-red-500 text-xs mt-1">{phoneError}</p>}
+                                        </div>
 
-                                    <div className="bg-white border-2 border-gray-100 rounded-xl p-3 focus-within:ring-1 focus-within:ring-[#151794] focus-within:border-[#151794] transition-all shadow-sm group">
-                                        <label className="flex items-center gap-2 text-[11px] font-bold text-gray-500 uppercase tracking-widest mb-1 group-focus-within:text-[#151794]">
-                                            <MessageSquare size={14} /> Enquiry
-                                        </label>
-                                        <textarea
-                                            name="message"
-                                            value={formData.message}
-                                            onChange={handleChange}
-                                            required
-                                            rows={3}
-                                            className="w-full text-base font-bold text-gray-900 focus:outline-none bg-transparent placeholder-gray-400 resize-none"
-                                            placeholder="How can we help you?"
-                                        />
-                                    </div>
+                                        <div className="bg-white border-2 border-gray-100 rounded-xl p-3 focus-within:ring-1 focus-within:ring-[#151794] focus-within:border-[#151794] transition-all shadow-sm group">
+                                            <label className="flex items-center gap-2 text-[11px] font-bold text-gray-500 uppercase tracking-widest mb-1 group-focus-within:text-[#151794]">
+                                                <MessageSquare size={14} /> Enquiry
+                                            </label>
+                                            <textarea
+                                                name="message"
+                                                value={formData.message}
+                                                onChange={handleChange}
+                                                required
+                                                rows={3}
+                                                className="w-full text-base font-bold text-gray-900 focus:outline-none bg-transparent placeholder-gray-400 resize-none"
+                                                placeholder="How can we help you?"
+                                            />
+                                        </div>
 
-                                    <button
-                                        type="submit"
-                                        className="w-full mt-4 bg-[#151794] text-white py-4 rounded-xl font-bold text-sm uppercase tracking-[0.2em] hover:bg-[#1a1cba] hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300 flex justify-center items-center gap-2 group shadow-md"
-                                    >
-                                        Submit Enquiry <Plane size={16} className="transform group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
-                                    </button>
-                                </form>
+                                        <button
+                                            type="submit"
+                                            className="w-full mt-4 bg-[#151794] text-white py-4 rounded-xl font-bold text-sm uppercase tracking-[0.2em] hover:bg-[#1a1cba] hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300 flex justify-center items-center gap-2 group shadow-md"
+                                        >
+                                            Submit Enquiry <Plane size={16} className="transform group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
+                                        </button>
+                                    </form>
                                 )}
                             </div>
                         </motion.div>

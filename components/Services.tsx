@@ -72,6 +72,7 @@ export default function Services() {
     const [cabData, setCabData] = useState<Cab[]>([]);
 
     const [visaCategories, setVisaCategories] = useState<string[]>(defaultVisaCategories);
+    const [visibleCards, setVisibleCards] = useState(6); // Default 3 rows * 2 cards = 6
 
     const [loading, setLoading] = useState(true);
 
@@ -123,7 +124,7 @@ export default function Services() {
     const activeItem = getActiveItem();
 
     return (
-        <section id="services" className={`pt-[100px] pb-[100px] bg-[#151794] relative transition-colors duration-300 ${selectedId ? 'z-[100]' : 'z-10'}`}>
+        <section id="services" className={`pt-7 pb-7 md:pb-[100px] lg:pt-[100px] bg-[#151794] relative transition-colors duration-300 ${selectedId ? 'z-[100]' : 'z-10'}`}>
             {/* Scattered Small White Shapes */}
             <ScatteredShapes />
 
@@ -147,7 +148,7 @@ export default function Services() {
                         <button
                             key={tab.id}
                             onClick={() => { setActiveTab(tab.id); setSelectedId(null); }}
-                            className={`flex items-center gap-2 px-8 py-4 rounded-full text-base font-bold transition-all duration-200 transform whitespace-nowrap backdrop-blur-lg border ${activeTab === tab.id
+                            className={`flex items-center gap-2 px-5 py-2.5 md:px-8 md:py-4 rounded-full text-xs md:text-base font-bold transition-all duration-200 transform whitespace-nowrap backdrop-blur-lg border ${activeTab === tab.id
                                 ? "bg-white text-[#151794] border-white translate-y-[6px] shadow-[0_0px_0_rgba(255,255,255,0.4),0_0px_0px_rgba(0,0,0,0)]"
                                 : "bg-white/10 text-white border-white/20 hover:-translate-y-[2px] hover:bg-white/20 shadow-[0_6px_0_rgba(255,255,255,0.4),0_15px_20px_rgba(0,0,0,0.2)] active:translate-y-[6px] active:shadow-[0_0px_0_rgba(255,255,255,0.4),0_0px_0px_rgba(0,0,0,0)]"
                                 }`}
@@ -167,25 +168,47 @@ export default function Services() {
                         {/* Visa Content */}
                         {activeTab === "visa" && (
                             <div className="w-full">
-                                {/* Visa Categories */}
-                                <div className="flex flex-wrap justify-center gap-2 mb-8">
-                                    {visaCategories.map((category) => (
-                                        <button
-                                            key={category}
-                                            onClick={() => setActiveVisaCategory(category)}
-                                            className={`px-6 py-2.5 rounded-full text-sm font-bold uppercase tracking-wide transition-all shadow-sm ${activeVisaCategory === category
-                                                ? "bg-white text-[#151794] shadow-lg border-2 border-[#151794]"
-                                                : "text-blue-100 hover:text-white hover:bg-white/10 border-2 border-white"
-                                                }`}
+                                {/* Visa Categories - Dropdown on Mobile, Buttons on Desktop */}
+                                <div className="mb-8 flex justify-center">
+                                    <div className="md:hidden w-full max-w-[280px]">
+                                        <select
+                                            value={activeVisaCategory}
+                                            onChange={(e) => {
+                                                setActiveVisaCategory(e.target.value);
+                                                setVisibleCards(6);
+                                            }}
+                                            className="w-full bg-white/10 text-white border-2 border-white/20 px-6 py-3 rounded-full font-bold text-sm uppercase tracking-wide outline-none focus:border-white transition-all appearance-none text-center"
+                                            style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='white'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E")`, backgroundRepeat: 'no-repeat', backgroundPosition: 'right 1.5rem center', backgroundSize: '1.25rem' }}
                                         >
-                                            {category}
-                                        </button>
-                                    ))}
+                                            {visaCategories.map((category) => (
+                                                <option key={category} value={category} className="bg-[#151794] text-white">
+                                                    {category}
+                                                </option>
+                                            ))}
+                                        </select>
+                                    </div>
+                                    <div className="hidden md:flex flex-wrap justify-center gap-2">
+                                        {visaCategories.map((category) => (
+                                            <button
+                                                key={category}
+                                                onClick={() => {
+                                                    setActiveVisaCategory(category);
+                                                    setVisibleCards(6);
+                                                }}
+                                                className={`px-6 py-2.5 rounded-full text-sm font-bold uppercase tracking-wide transition-all shadow-sm ${activeVisaCategory === category
+                                                    ? "bg-white text-[#151794] shadow-lg border-2 border-[#151794]"
+                                                    : "text-blue-100 hover:text-white hover:bg-white/10 border-2 border-white"
+                                                    }`}
+                                            >
+                                                {category}
+                                            </button>
+                                        ))}
+                                    </div>
                                 </div>
 
-                                <div className="flex flex-wrap justify-center gap-6 md:gap-8">
-                                    <AnimatePresence mode="wait">
-                                        {filteredVisaData.map((item, index) => (
+                                <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 md:gap-8">
+                                    <AnimatePresence mode="popLayout">
+                                        {filteredVisaData.slice(0, visibleCards).map((item, index) => (
                                             <ServiceCard
                                                 key={item._id}
                                                 item={item}
@@ -196,60 +219,106 @@ export default function Services() {
                                         ))}
                                     </AnimatePresence>
                                 </div>
+                                {filteredVisaData.length > visibleCards && (
+                                    <div className="flex justify-center mt-8 md:mt-12">
+                                        <button
+                                            onClick={() => setVisibleCards(prev => prev + 6)}
+                                            className="bg-white text-[#151794] px-8 py-3 md:px-10 md:py-4 rounded-full text-xs md:text-base font-bold uppercase tracking-widest transition-all hover:-translate-y-1 hover:shadow-2xl active:translate-y-1 shadow-[0_10px_30px_rgba(255,255,255,0.2)]"
+                                        >
+                                            Show More Results
+                                        </button>
+                                    </div>
+                                )}
                                 {filteredVisaData.length === 0 && <EmptyState message="No visas found." />}
                             </div>
                         )}
 
                         {/* Destinations Content */}
                         {activeTab === "destinations" && (
-                            <div className="flex flex-wrap justify-center gap-6 md:gap-8">
-                                <AnimatePresence mode="wait">
-                                    {destinationData.map((item, index) => (
-                                        <ServiceCard
-                                            key={item._id}
-                                            item={item}
-                                            index={index}
-                                            onClick={() => setSelectedId(item._id)}
-                                            type="destination"
-                                        />
-                                    ))}
-                                </AnimatePresence>
+                            <div className="w-full">
+                                <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 md:gap-8">
+                                    <AnimatePresence mode="popLayout">
+                                        {destinationData.slice(0, visibleCards).map((item, index) => (
+                                            <ServiceCard
+                                                key={item._id}
+                                                item={item}
+                                                index={index}
+                                                onClick={() => setSelectedId(item._id)}
+                                                type="destination"
+                                            />
+                                        ))}
+                                    </AnimatePresence>
+                                </div>
+                                {destinationData.length > visibleCards && (
+                                    <div className="flex justify-center mt-8 md:mt-12">
+                                        <button
+                                            onClick={() => setVisibleCards(prev => prev + 6)}
+                                            className="bg-white text-[#151794] px-8 py-3 md:px-10 md:py-4 rounded-full text-xs md:text-base font-bold uppercase tracking-widest transition-all hover:-translate-y-1 hover:shadow-2xl active:translate-y-1 shadow-[0_10px_30px_rgba(255,255,255,0.2)]"
+                                        >
+                                            Show More Results
+                                        </button>
+                                    </div>
+                                )}
                                 {destinationData.length === 0 && <EmptyState message="No destinations found." />}
                             </div>
                         )}
 
                         {/* Rooms Content */}
                         {activeTab === "rooms" && (
-                            <div className="flex flex-wrap justify-center gap-6 md:gap-8">
-                                <AnimatePresence mode="wait">
-                                    {roomData.map((item, index) => (
-                                        <ServiceCard
-                                            key={item._id}
-                                            item={item}
-                                            index={index}
-                                            onClick={() => setSelectedId(item._id)}
-                                            type="room"
-                                        />
-                                    ))}
-                                </AnimatePresence>
+                            <div className="w-full">
+                                <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 md:gap-8">
+                                    <AnimatePresence mode="popLayout">
+                                        {roomData.slice(0, visibleCards).map((item, index) => (
+                                            <ServiceCard
+                                                key={item._id}
+                                                item={item}
+                                                index={index}
+                                                onClick={() => setSelectedId(item._id)}
+                                                type="room"
+                                            />
+                                        ))}
+                                    </AnimatePresence>
+                                </div>
+                                {roomData.length > visibleCards && (
+                                    <div className="flex justify-center mt-8 md:mt-12">
+                                        <button
+                                            onClick={() => setVisibleCards(prev => prev + 6)}
+                                            className="bg-white text-[#151794] px-8 py-3 md:px-10 md:py-4 rounded-full text-xs md:text-base font-bold uppercase tracking-widest transition-all hover:-translate-y-1 hover:shadow-2xl active:translate-y-1 shadow-[0_10px_30px_rgba(255,255,255,0.2)]"
+                                        >
+                                            Show More Results
+                                        </button>
+                                    </div>
+                                )}
                                 {roomData.length === 0 && <EmptyState message="No rooms found." />}
                             </div>
                         )}
 
                         {/* Cabs Content */}
                         {activeTab === "cab" && (
-                            <div className="flex flex-wrap justify-center gap-6 md:gap-8">
-                                <AnimatePresence mode="wait">
-                                    {cabData.map((item, index) => (
-                                        <ServiceCard
-                                            key={item._id}
-                                            item={item}
-                                            index={index}
-                                            onClick={() => setSelectedId(item._id)}
-                                            type="cab"
-                                        />
-                                    ))}
-                                </AnimatePresence>
+                            <div className="w-full">
+                                <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 md:gap-8">
+                                    <AnimatePresence mode="popLayout">
+                                        {cabData.slice(0, visibleCards).map((item, index) => (
+                                            <ServiceCard
+                                                key={item._id}
+                                                item={item}
+                                                index={index}
+                                                onClick={() => setSelectedId(item._id)}
+                                                type="cab"
+                                            />
+                                        ))}
+                                    </AnimatePresence>
+                                </div>
+                                {cabData.length > visibleCards && (
+                                    <div className="flex justify-center mt-8 md:mt-12">
+                                        <button
+                                            onClick={() => setVisibleCards(prev => prev + 6)}
+                                            className="bg-white text-[#151794] px-8 py-3 md:px-10 md:py-4 rounded-full text-xs md:text-base font-bold uppercase tracking-widest transition-all hover:-translate-y-1 hover:shadow-2xl active:translate-y-1 shadow-[0_10px_30px_rgba(255,255,255,0.2)]"
+                                        >
+                                            Show More Results
+                                        </button>
+                                    </div>
+                                )}
                                 {cabData.length === 0 && <EmptyState message="No cabs found." />}
                             </div>
                         )}
@@ -302,7 +371,7 @@ function ServiceCard({ item, index, onClick, type }: { item: any, index: number,
             whileHover={{ y: -5, scale: 1.05, zIndex: 10 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.4, delay: index * 0.05 }}
-            className="flex flex-col bg-white rounded-2xl overflow-hidden shadow-sm border-[3px] border-slate-100 group hover:shadow-xl transition-shadow duration-300 w-full sm:w-[calc(50%-0.75rem)] md:w-[calc(50%-1rem)] lg:w-[calc(33.333%-1.333rem)] xl:w-[calc(25%-1.5rem)] flex-shrink-0"
+            className="flex flex-col bg-white rounded-2xl overflow-hidden shadow-sm border-[3px] border-slate-100 group hover:shadow-xl transition-shadow duration-300 w-full flex-shrink-0"
         >
             <div className="relative aspect-[4/3] overflow-hidden">
                 <img
@@ -326,12 +395,12 @@ function ServiceCard({ item, index, onClick, type }: { item: any, index: number,
                 )}
             </div>
 
-            <div className="p-5 flex flex-row items-center justify-between gap-4 bg-white">
-                <div className="flex-1 min-w-0">
-                    <h3 className="text-bookease-navy font-bold text-lg md:text-xl line-clamp-1 mb-1">
+            <div className="p-3 md:p-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 md:gap-4 bg-white">
+                <div className="flex-1 min-w-0 w-full">
+                    <h3 className="text-bookease-navy font-bold text-base md:text-xl line-clamp-1 mb-0.5 md:mb-1">
                         {item.name || item.country}
                     </h3>
-                    <p className="text-slate-500 text-sm font-semibold">
+                    <p className="text-slate-500 text-xs md:text-sm font-semibold">
                         {type === "visa"
                             ? `₹ ${item.cost}`
                             : `${item.price || item.cost}`}
@@ -340,7 +409,7 @@ function ServiceCard({ item, index, onClick, type }: { item: any, index: number,
 
                 <button
                     onClick={onClick}
-                    className="bg-[#151794] text-white px-8 py-3 rounded-full text-sm font-bold uppercase tracking-wider cursor-pointer whitespace-nowrap border-2 border-[#151794] transition-all duration-200 transform hover:-translate-y-[2px] active:translate-y-[4px] shadow-[0_4px_0_#0a0b5c,0_10px_15px_rgba(0,0,0,0.3)] active:shadow-[0_0px_0_#0a0b5c,0_0px_0px_rgba(0,0,0,0)]"
+                    className="w-full sm:w-auto bg-[#151794] text-white px-4 md:px-8 py-2 md:py-3 rounded-full text-[10px] md:text-sm font-bold uppercase tracking-wider cursor-pointer whitespace-nowrap border-2 border-[#151794] transition-all duration-200 transform hover:-translate-y-[2px] active:translate-y-[4px] shadow-[0_4px_0_#0a0b5c,0_10px_15px_rgba(0,0,0,0.3)] active:shadow-[0_0px_0_#0a0b5c,0_0px_0px_rgba(0,0,0,0)]"
                 >
                     Details
                 </button>
@@ -392,7 +461,7 @@ function ModalContent({ item, type, onClose }: { item: any, type: string, onClos
                 <div className="hidden md:block absolute left-[66%] -bottom-[20px] w-10 h-10 bg-black/60 rounded-full z-20 pointer-events-none" />
 
                 {/* Left Section: Main Ticket Body */}
-                <div className="w-full md:w-2/3 p-6 md:p-10 flex flex-col border-b-2 md:border-b-0 md:border-r-2 border-dashed border-slate-200 overflow-y-auto scrollbar-hide">
+                <div className="w-full md:w-2/3 p-4 md:p-10 flex flex-col border-b-2 md:border-b-0 md:border-r-2 border-dashed border-slate-200 overflow-y-auto scrollbar-hide">
                     {/* Header */}
                     <div className="flex justify-between items-start mb-8 border-b-2 border-slate-100 pb-6 shrink-0">
                         <div className="flex items-center gap-4">
@@ -451,7 +520,7 @@ function ModalContent({ item, type, onClose }: { item: any, type: string, onClos
                 </div>
 
                 {/* Right Section: Ticket Stub / Enquiry */}
-                <div className="w-full md:w-1/3 bg-slate-50 p-8 md:p-10 flex flex-col overflow-y-auto scrollbar-hide">
+                <div className="w-full md:w-1/3 bg-slate-50 p-6 md:p-10 flex flex-col overflow-y-auto scrollbar-hide">
                     <div className="mb-8">
                         <p className="text-[10px] font-black text-slate-400 tracking-[0.2em] uppercase mb-1">Boarding Pass ID</p>
                         <h4 className="font-black text-xl text-[#151794] uppercase tracking-tighter break-words">
@@ -553,13 +622,28 @@ function ModalContent({ item, type, onClose }: { item: any, type: string, onClos
                     )}
                 </div>
 
-                <div className={`grid gap-6 text-base flex-grow ${type === 'visa' ? 'grid-cols-1 md:grid-cols-2' : 'grid-cols-1'}`}>
+                <div className={`grid gap-5 text-base flex-grow ${type === 'visa' ? 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3' : 'grid-cols-1'}`}>
 
-                    <div className={type === 'visa' ? "flex flex-col gap-4" : "space-y-6"}>
+                    <div className={type === 'visa' ? "flex flex-col gap-5" : "space-y-6"}>
                         {type === "visa" ? (
-                            <div className="bg-white p-4 rounded-xl shadow-sm border border-slate-100 flex flex-col justify-center transition-all hover:-translate-y-1">
-                                <p className="text-slate-400 text-[10px] font-black uppercase tracking-widest mb-1">Price</p>
-                                <p className="font-extrabold text-[#151794] text-xl line-clamp-1">₹ {item.cost}</p>
+                            <div className="space-y-3">
+                                <h4 className="flex items-center gap-2 text-slate-800 font-bold text-base">
+                                    <span className="w-1.5 h-1.5 bg-[#151794] rounded-full" /> Visa Details
+                                </h4>
+                                <div className="bg-white rounded-2xl border border-slate-100 shadow-sm divide-y divide-slate-50">
+                                    <div className="p-3.5 flex justify-between items-center transition-colors hover:bg-slate-50/50">
+                                        <p className="text-slate-400 text-[10px] font-black uppercase tracking-widest">Price</p>
+                                        <p className="font-extrabold text-[#151794] text-lg">₹ {item.cost}</p>
+                                    </div>
+                                    <div className="p-3.5 flex justify-between items-center transition-colors hover:bg-slate-50/50">
+                                        <p className="text-slate-400 text-[10px] font-black uppercase tracking-widest">Processing</p>
+                                        <p className="font-bold text-slate-700 text-base">{item.processingDays} Days</p>
+                                    </div>
+                                    <div className="p-3.5 flex justify-between items-center transition-colors hover:bg-slate-50/50">
+                                        <p className="text-slate-400 text-[10px] font-black uppercase tracking-widest">Validity</p>
+                                        <p className="font-bold text-slate-700 text-base">{item.validity} Days</p>
+                                    </div>
+                                </div>
                             </div>
                         ) : (
                             <div className="space-y-1">
@@ -568,27 +652,6 @@ function ModalContent({ item, type, onClose }: { item: any, type: string, onClos
                                     {(item.price || item.cost)}
                                 </p>
                             </div>
-                        )}
-
-                        {type === "visa" && (
-                            <>
-                                <div className="bg-white p-4 rounded-xl shadow-sm border border-slate-100 flex flex-col justify-center transition-all hover:-translate-y-1">
-                                    <p className="text-slate-400 text-[10px] font-black uppercase tracking-widest mb-1">Processing Time</p>
-                                    <p className="font-bold text-slate-700 text-lg line-clamp-1">{item.processingDays} Days</p>
-                                </div>
-                                <div className="bg-white p-4 rounded-xl shadow-sm border border-slate-100 flex flex-col justify-center transition-all hover:-translate-y-1">
-                                    <p className="text-slate-400 text-[10px] font-black uppercase tracking-widest mb-1">Validity</p>
-                                    <p className="font-bold text-slate-700 text-lg line-clamp-1">{item.validity} Days</p>
-                                </div>
-                                <div className="bg-white p-4 rounded-xl shadow-sm border border-slate-100 flex flex-col justify-center transition-all hover:-translate-y-1">
-                                    <p className="text-slate-400 text-[10px] font-black uppercase tracking-widest mb-1">Category</p>
-                                    <p className="font-bold text-slate-700 text-lg line-clamp-1">{item.category || "Asia"}</p>
-                                </div>
-                                <div className="bg-white p-4 rounded-xl shadow-sm border border-slate-100 flex flex-col justify-center transition-all hover:-translate-y-1">
-                                    <p className="text-slate-400 text-[10px] font-black uppercase tracking-widest mb-1">Contact Person</p>
-                                    <p className="font-bold text-slate-700 text-lg line-clamp-1">{item.contactPerson || "Support"}</p>
-                                </div>
-                            </>
                         )}
 
                         {type === "destinations" && item.description && (
@@ -622,35 +685,53 @@ function ModalContent({ item, type, onClose }: { item: any, type: string, onClos
                     </div>
 
                     {type === "visa" && (
-                        <div className="space-y-1 h-full flex flex-col">
-                            <h4 className="flex items-center gap-2 text-slate-800 font-bold text-lg mb-2">
-                                <CheckCircle2 size={18} className="text-[#151794]" /> Requirements
-                            </h4>
-                            <div className="bg-white rounded-2xl p-4 sm:p-5 border border-slate-100 shadow-sm h-full max-h-[300px] overflow-y-auto w-full">
-                                <ul className="space-y-3">
-                                    {(item.requirements?.length > 0 ? item.requirements : ["Passport", "Photo"])
-                                        .filter((req: string) => req.trim() !== "")
-                                        .map((req: string, i: number) => (
-                                            <li key={i} className="flex items-start gap-3 text-slate-600 font-medium text-sm">
-                                                <div className="mt-1.5 w-1.5 h-1.5 rounded-full bg-[#151794] flex-shrink-0 opacity-70" />
-                                                <span className="leading-relaxed">{req}</span>
-                                            </li>
-                                        ))}
-                                </ul>
+                        <>
+                            <div className="space-y-3 h-full flex flex-col">
+                                <h4 className="flex items-center gap-2 text-slate-800 font-bold text-base">
+                                    <CheckCircle2 size={16} className="text-[#151794]" /> Requirements
+                                </h4>
+                                <div className="bg-white rounded-2xl p-4 border border-slate-100 shadow-sm h-full max-h-[350px] md:max-h-full overflow-y-auto w-full">
+                                    <ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-x-4 gap-y-2">
+                                        {(item.requirements?.length > 0 ? item.requirements : ["Passport", "Photo"])
+                                            .filter((req: string) => req.trim() !== "")
+                                            .map((req: string, i: number) => (
+                                                <li key={i} className="flex items-start gap-2.5 text-slate-600 font-medium text-xs">
+                                                    <div className="mt-1 w-1 h-1 rounded-full bg-[#151794] flex-shrink-0 opacity-60" />
+                                                    <span className="leading-snug">{req}</span>
+                                                </li>
+                                            ))}
+                                    </ul>
+                                </div>
                             </div>
 
-                            <div className="mt-4 flex flex-col gap-2">
-                                <div className="flex bg-white rounded-xl border border-slate-100 shadow-sm p-3 items-center gap-3 w-full transition-all hover:-translate-y-1">
-                                    <div className="bg-green-50 text-green-600 p-2 rounded-lg">
-                                        <Phone size={16} strokeWidth={2.5} />
+                            <div className="space-y-3">
+                                <h4 className="flex items-center gap-2 text-slate-800 font-bold text-base">
+                                    <Phone size={16} className="text-[#151794]" /> Contact Info
+                                </h4>
+                                <div className="bg-white rounded-2xl border border-slate-100 shadow-sm divide-y divide-slate-50 overflow-hidden">
+                                    <div className="p-3.5 flex justify-between items-center transition-colors hover:bg-slate-50/50">
+                                        <p className="text-slate-400 text-[10px] font-black uppercase tracking-widest">Person</p>
+                                        <p className="font-extrabold text-[#151794] text-base uppercase line-clamp-1">{item.contactPerson || "Support"}</p>
                                     </div>
-                                    <div className="flex flex-col">
-                                        <span className="text-slate-400 text-[9px] font-black uppercase tracking-widest leading-none mb-1">Support</span>
-                                        <span className="font-extrabold text-[#151794] text-sm leading-none">{item.contactNumber || "9846223028"}</span>
+                                    <div className="p-3.5 flex flex-col gap-3">
+                                        <div className="flex justify-between items-center">
+                                            <p className="text-slate-400 text-[10px] font-black uppercase tracking-widest">Number</p>
+                                            <p className="font-extrabold text-[#151794] text-base">{item.contactNumber || "9846223028"}</p>
+                                        </div>
+                                        <button
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                                window.location.href = `tel:${item.contactNumber || "9846223028"}`;
+                                            }}
+                                            className="w-full bg-[#151794] text-white py-2.5 rounded-xl font-bold text-sm flex items-center justify-center gap-2 transition-all hover:bg-[#151794]/90 active:scale-[0.98] shadow-sm"
+                                        >
+                                            <Phone size={14} fill="currentColor" />
+                                            Call Now
+                                        </button>
                                     </div>
                                 </div>
                             </div>
-                        </div>
+                        </>
                     )}
                 </div>
 
