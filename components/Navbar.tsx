@@ -62,7 +62,7 @@ export default function Navbar() {
                     {/* Desktop Logo */}
                     <div className="hidden md:block relative w-48 h-12 md:w-56 md:h-14">
                         <Image
-                            src={isScrolled ? "/images/mainlogo.png" : "/images/mainlogo2.png"}
+                            src={isScrolled ? "/images/desktopnav2.png" : "/images/mainlogo2.png"}
                             alt="Khaleefa Holidays Logo"
                             fill
                             className="object-contain object-left"

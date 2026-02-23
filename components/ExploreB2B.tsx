@@ -84,7 +84,7 @@ export default function ExploreB2B() {
                             <div className="absolute inset-0 z-0">
                                 <Image
                                     src="https://images.unsplash.com/39/lIZrwvbeRuuzqOoWJUEn_Photoaday_CSD%20%281%20of%201%29-5.jpg?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-                                    alt="B2B Partnership"
+                                    alt="Khaleefa Holidays B2B Travel Partnership Opportunities"
                                     fill
                                     className="object-cover"
                                     priority

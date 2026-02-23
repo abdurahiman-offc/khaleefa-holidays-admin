@@ -53,7 +53,7 @@ export default function ContactUs() {
     const [pnr] = useState(() => "KH" + Math.floor(Math.random() * 90000 + 10000));
 
     return (
-        <section id="contact" className="pt-[100px] pb-11 md:pb-[150px] bg-[#151794] relative overflow-hidden">
+        <section id="contact" className="pt-[100px] pb-[94px] md:pb-[200px] bg-[#151794] relative overflow-hidden">
             <ScatteredShapes />
 
             <div className="container mx-auto px-4 relative z-10">
@@ -190,13 +190,23 @@ export default function ContactUs() {
                                             placeholder="ANY SPECIAL REQUESTS?"
                                         />
                                     </div>
+
+                                    {/* Mobile Confirm Button */}
+                                    {!submitted && (
+                                        <button
+                                            type="submit"
+                                            className="w-full lg:hidden bg-[#151794] text-white py-4 rounded-xl font-bold text-sm uppercase tracking-[0.2em] hover:bg-[#1a1cba] active:scale-95 transition-all duration-300 flex justify-center items-center gap-2 group mt-6"
+                                        >
+                                            Confirm <Plane size={16} className="transform group-hover:translate-x-1 transition-transform" />
+                                        </button>
+                                    )}
                                 </form>
                             )}
 
                         </div>
 
                         {/* --- RIGHT SECTION: TICKET STUB --- */}
-                        <div className="w-full lg:w-[30%] bg-[#fafafa] p-6 md:p-10 flex flex-col justify-between relative lg:rounded-r-3xl max-lg:rounded-b-3xl relative">
+                        <div className="w-full lg:w-[30%] bg-[#fafafa] p-6 md:p-10 flex flex-col justify-between relative lg:rounded-r-3xl max-lg:rounded-b-3xl">
 
                             <div className="space-y-6">
                                 {/* Stub Header */}
@@ -264,7 +274,7 @@ export default function ContactUs() {
                                     <button
                                         type="submit"
                                         form="ticket-form"
-                                        className="w-full bg-[#151794] text-white py-4 rounded-xl font-bold text-sm uppercase tracking-[0.2em] hover:bg-[#1a1cba] hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300 flex justify-center items-center gap-2 group"
+                                        className="w-full hidden lg:flex bg-[#151794] text-white py-4 rounded-xl font-bold text-sm uppercase tracking-[0.2em] hover:bg-[#1a1cba] hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300 justify-center items-center gap-2 group"
                                     >
                                         Confirm <Plane size={16} className="transform group-hover:translate-x-1 transition-transform" />
                                     </button>
@@ -274,7 +284,7 @@ export default function ContactUs() {
 
                     </div>
                 </motion.div>
-            </div>
-        </section>
+            </div >
+        </section >
     );
 }

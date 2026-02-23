@@ -65,6 +65,16 @@ export default function Services() {
     const [activeVisaCategory, setActiveVisaCategory] = useState("All Categories");
     const [selectedId, setSelectedId] = useState<string | null>(null);
 
+    // Body scroll lock on modal open
+    useEffect(() => {
+        if (selectedId) {
+            document.body.style.overflow = 'hidden';
+        } else {
+            document.body.style.overflow = 'unset';
+        }
+        return () => { document.body.style.overflow = 'unset'; };
+    }, [selectedId]);
+
     // Dynamic Data State
     const [visaData, setVisaData] = useState<Visa[]>([]);
     const [destinationData, setDestinationData] = useState<Destination[]>([]);
@@ -164,7 +174,7 @@ export default function Services() {
                         <Loader2 className="w-8 h-8 animate-spin text-bookease-navy " />
                     </div>
                 ) : (
-                    <div className="min-h-[400px]">
+                    <div className="">
                         {/* Visa Content */}
                         {activeTab === "visa" && (
                             <div className="w-full">
@@ -206,7 +216,7 @@ export default function Services() {
                                     </div>
                                 </div>
 
-                                <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 md:gap-8">
+                                <div className="flex flex-wrap justify-center gap-3 md:gap-8">
                                     <AnimatePresence mode="popLayout">
                                         {filteredVisaData.slice(0, visibleCards).map((item, index) => (
                                             <ServiceCard
@@ -236,7 +246,7 @@ export default function Services() {
                         {/* Destinations Content */}
                         {activeTab === "destinations" && (
                             <div className="w-full">
-                                <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 md:gap-8">
+                                <div className="flex flex-wrap justify-center gap-3 md:gap-8">
                                     <AnimatePresence mode="popLayout">
                                         {destinationData.slice(0, visibleCards).map((item, index) => (
                                             <ServiceCard
@@ -265,61 +275,19 @@ export default function Services() {
 
                         {/* Rooms Content */}
                         {activeTab === "rooms" && (
-                            <div className="w-full">
-                                <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 md:gap-8">
-                                    <AnimatePresence mode="popLayout">
-                                        {roomData.slice(0, visibleCards).map((item, index) => (
-                                            <ServiceCard
-                                                key={item._id}
-                                                item={item}
-                                                index={index}
-                                                onClick={() => setSelectedId(item._id)}
-                                                type="room"
-                                            />
-                                        ))}
-                                    </AnimatePresence>
-                                </div>
-                                {roomData.length > visibleCards && (
-                                    <div className="flex justify-center mt-8 md:mt-12">
-                                        <button
-                                            onClick={() => setVisibleCards(prev => prev + 6)}
-                                            className="bg-white text-[#151794] px-8 py-3 md:px-10 md:py-4 rounded-full text-xs md:text-base font-bold uppercase tracking-widest transition-all hover:-translate-y-1 hover:shadow-2xl active:translate-y-1 shadow-[0_10px_30px_rgba(255,255,255,0.2)]"
-                                        >
-                                            Show More Results
-                                        </button>
-                                    </div>
-                                )}
-                                {roomData.length === 0 && <EmptyState message="No rooms found." />}
+                            <div className="w-full flex items-center justify-center py-20">
+                                <p className="text-white text-[56px] font-bold uppercase tracking-widest">
+                                    coming soon...
+                                </p>
                             </div>
                         )}
 
                         {/* Cabs Content */}
                         {activeTab === "cab" && (
-                            <div className="w-full">
-                                <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 md:gap-8">
-                                    <AnimatePresence mode="popLayout">
-                                        {cabData.slice(0, visibleCards).map((item, index) => (
-                                            <ServiceCard
-                                                key={item._id}
-                                                item={item}
-                                                index={index}
-                                                onClick={() => setSelectedId(item._id)}
-                                                type="cab"
-                                            />
-                                        ))}
-                                    </AnimatePresence>
-                                </div>
-                                {cabData.length > visibleCards && (
-                                    <div className="flex justify-center mt-8 md:mt-12">
-                                        <button
-                                            onClick={() => setVisibleCards(prev => prev + 6)}
-                                            className="bg-white text-[#151794] px-8 py-3 md:px-10 md:py-4 rounded-full text-xs md:text-base font-bold uppercase tracking-widest transition-all hover:-translate-y-1 hover:shadow-2xl active:translate-y-1 shadow-[0_10px_30px_rgba(255,255,255,0.2)]"
-                                        >
-                                            Show More Results
-                                        </button>
-                                    </div>
-                                )}
-                                {cabData.length === 0 && <EmptyState message="No cabs found." />}
+                            <div className="w-full flex items-center justify-center py-20">
+                                <p className="text-white text-[56px] font-bold uppercase tracking-widest">
+                                    coming soon...
+                                </p>
                             </div>
                         )}
                     </div>
@@ -371,12 +339,12 @@ function ServiceCard({ item, index, onClick, type }: { item: any, index: number,
             whileHover={{ y: -5, scale: 1.05, zIndex: 10 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.4, delay: index * 0.05 }}
-            className="flex flex-col bg-white rounded-2xl overflow-hidden shadow-sm border-[3px] border-slate-100 group hover:shadow-xl transition-shadow duration-300 w-full flex-shrink-0"
+            className="flex flex-col bg-white rounded-2xl overflow-hidden shadow-sm border-[3px] border-slate-100 group hover:shadow-xl transition-shadow duration-300 w-[calc(50%-0.5rem)] lg:w-[calc(33.333%-1.5rem)] xl:w-[calc(25%-1.75rem)] flex-shrink-0"
         >
             <div className="relative aspect-[4/3] overflow-hidden">
                 <img
                     src={item.image}
-                    alt={item.name || item.country}
+                    alt={`${item.name || item.country} ${type} service - Khaleefa Holidays`}
                     className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                     loading="lazy"
                 />
@@ -424,7 +392,8 @@ function ModalContent({ item, type, onClose }: { item: any, type: string, onClos
     const [phoneError, setPhoneError] = useState("");
 
     const contactNumber = item.contactNumber || "9846223028";
-    let whatsappText = `Hi, I'm interested in ${item.name || item.country}.`;
+    const contactPerson = item.contactPerson || "Muhammed";
+    const whatsappText = `Hi, I'm interested in ${item.name || item.country}.`;
 
     const handleEnquirySubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -439,7 +408,7 @@ function ModalContent({ item, type, onClose }: { item: any, type: string, onClos
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
-                    type: "Destination",
+                    type: type === "destinations" ? "Destination" : (type === "visa" ? "Visa" : type.charAt(0).toUpperCase() + type.slice(1)),
                     name: formData.name,
                     phone: formData.phone,
                     message: formData.enquiry,
@@ -453,336 +422,255 @@ function ModalContent({ item, type, onClose }: { item: any, type: string, onClos
         setSubmitted(true);
     };
 
-    if (type === "destinations") {
-        return (
-            <div className="flex flex-col md:flex-row w-full h-full relative overflow-hidden bg-white md:rounded-3xl">
-                {/* Visual Cutouts for Ticket Effect */}
-                <div className="hidden md:block absolute left-[66%] -top-[20px] w-10 h-10 bg-black/60 rounded-full z-20 pointer-events-none" />
-                <div className="hidden md:block absolute left-[66%] -bottom-[20px] w-10 h-10 bg-black/60 rounded-full z-20 pointer-events-none" />
-
-                {/* Left Section: Main Ticket Body */}
-                <div className="w-full md:w-2/3 p-4 md:p-10 flex flex-col border-b-2 md:border-b-0 md:border-r-2 border-dashed border-slate-200 overflow-y-auto scrollbar-hide">
-                    {/* Header */}
-                    <div className="flex justify-between items-start mb-8 border-b-2 border-slate-100 pb-6 shrink-0">
-                        <div className="flex items-center gap-4">
-                            <div className="w-12 h-12 bg-[#151794] rounded-2xl flex items-center justify-center text-white shadow-lg transform -rotate-12">
-                                <Plane size={24} className="transform rotate-45" />
-                            </div>
-                            <div>
-                                <h3 className="text-xl font-black text-[#151794] uppercase tracking-tighter">KH Holidays</h3>
-                                <p className="text-[10px] font-bold text-slate-400 tracking-[0.2em] uppercase">Premium Destination</p>
-                            </div>
-                        </div>
-                        <div className="text-right">
-                            <p className="text-[10px] font-bold text-slate-400 tracking-widest uppercase mb-1">Pass Status</p>
-                            <span className="px-3 py-1 bg-green-50 text-green-600 border border-green-200 rounded-full text-[10px] font-black uppercase tracking-widest shadow-sm">Verified</span>
-                        </div>
-                    </div>
-
-                    {/* Image & Title Section */}
-                    <div className="relative rounded-3xl overflow-hidden aspect-[16/9] mb-8 group shrink-0">
-                        <img src={item.image} alt={item.name} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
-                        <div className="absolute inset-0 bg-gradient-to-t from-[#151794]/80 via-transparent to-transparent" />
-                        <div className="absolute bottom-6 left-6 pr-6">
-                            <h2 className="text-3xl md:text-4xl font-black text-white uppercase tracking-tight leading-none drop-shadow-lg">
-                                {item.name}
-                            </h2>
-                            {item.popularDestination && (
-                                <span className="inline-block mt-2 px-3 py-1 bg-white/20 backdrop-blur-md text-white border border-white/30 rounded-full text-[10px] font-bold uppercase tracking-widest">
-                                    Popular Choice
-                                </span>
-                            )}
-                        </div>
-                    </div>
-
-                    {/* Stats Grid */}
-                    <div className="grid grid-cols-2 gap-4 mb-8 shrink-0">
-                        <div className="bg-slate-50 p-4 rounded-2xl border border-slate-100">
-                            <p className="text-slate-400 text-[9px] font-black uppercase tracking-widest mb-1 flex items-center gap-1">
-                                <span className="w-1 h-1 bg-[#151794] rounded-full" /> Price
-                            </p>
-                            <p className="font-black text-[#151794] text-lg">{item.price}</p>
-                        </div>
-                        <div className="bg-slate-50 p-4 rounded-2xl border border-slate-100">
-                            <p className="text-slate-400 text-[9px] font-black uppercase tracking-widest mb-1 flex items-center gap-1">
-                                <span className="w-1 h-1 bg-[#151794] rounded-full" /> Duration
-                            </p>
-                            <p className="font-bold text-slate-700 text-sm italic">{item.duration || "5 Days"}</p>
-                        </div>
-                    </div>
-
-                    {/* Overview */}
-                    <div className="bg-slate-50/50 p-6 rounded-3xl border border-slate-100/50 relative overflow-hidden shrink-0">
-                        <div className="absolute top-4 right-4 text-[#151794]/5"><Plane size={60} /></div>
-                        <p className="text-slate-400 text-[10px] font-black uppercase tracking-widest mb-4">Destination Overview</p>
-                        <p className="text-slate-600 leading-relaxed text-sm italic whitespace-pre-wrap relative z-10">{item.description}</p>
-                    </div>
-                </div>
-
-                {/* Right Section: Ticket Stub / Enquiry */}
-                <div className="w-full md:w-1/3 bg-slate-50 p-6 md:p-10 flex flex-col overflow-y-auto scrollbar-hide">
-                    <div className="mb-8">
-                        <p className="text-[10px] font-black text-slate-400 tracking-[0.2em] uppercase mb-1">Boarding Pass ID</p>
-                        <h4 className="font-black text-xl text-[#151794] uppercase tracking-tighter break-words">
-                            DEST-{(item.name || "TRIP").substring(0, 3).toUpperCase()}-{Math.floor(Math.random() * 1000)}
-                        </h4>
-                    </div>
-
-                    <div className="flex-grow">
-                        {submitted ? (
-                            <div className="flex flex-col items-center justify-center py-6 text-center">
-                                <div className="w-14 h-14 bg-green-100 rounded-full flex items-center justify-center mb-4">
-                                    <CheckCircle2 size={28} className="text-green-600" />
-                                </div>
-                                <h4 className="text-lg font-black text-[#151794] uppercase tracking-tight mb-2">Thank You!</h4>
-                                <p className="text-slate-600 text-sm">We&apos;ve received your enquiry and will get back to you shortly.</p>
-                            </div>
-                        ) : (
-                            <>
-                                <p className="text-[#151794] text-[11px] font-black uppercase tracking-widest mb-6 flex items-center gap-2">
-                                    <MessageSquare size={14} /> Quick Enquiry
-                                </p>
-                                <form onSubmit={handleEnquirySubmit} className="space-y-4">
-                                    <div className="space-y-1">
-                                        <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest px-1">Passenger Name</label>
-                                        <input required type="text" value={formData.name} onChange={e => setFormData({ ...formData, name: e.target.value })} className="w-full px-5 py-3.5 bg-white border border-slate-200 rounded-2xl focus:ring-2 focus:ring-[#151794]/20 outline-none text-sm font-bold uppercase transition-all" placeholder="YOUR NAME" />
-                                    </div>
-                                    <div className="space-y-1">
-                                        <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest px-1">Mobile No</label>
-                                        <input required type="tel" value={formData.phone} onChange={e => { setFormData({ ...formData, phone: e.target.value }); setPhoneError(""); }} className={`w-full px-5 py-3.5 bg-white border rounded-2xl focus:ring-2 focus:ring-[#151794]/20 outline-none text-sm font-bold uppercase transition-all ${phoneError ? "border-red-400" : "border-slate-200"}`} placeholder="+91 0000 0000" />
-                                        {phoneError && <p className="text-red-500 text-xs mt-1">{phoneError}</p>}
-                                    </div>
-                                    <div className="space-y-1">
-                                        <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest px-1">Enquiry Note</label>
-                                        <textarea required rows={3} value={formData.enquiry} onChange={e => setFormData({ ...formData, enquiry: e.target.value })} className="w-full px-5 py-3.5 bg-white border border-slate-200 rounded-2xl focus:ring-2 focus:ring-[#151794]/20 outline-none text-sm font-medium resize-none transition-all" placeholder="Tell us about your trip..." />
-                                    </div>
-
-                                    <button type="submit" className="w-full bg-[#151794] text-white px-8 py-4 rounded-2xl text-sm font-black uppercase tracking-widest transition-all duration-300 transform hover:-translate-y-1 hover:shadow-2xl active:translate-y-1 shadow-[0_10px_30px_rgba(21,23,148,0.2)] flex items-center justify-center gap-3 group mt-4">
-                                        Confirm Enquiry
-                                        <Plane size={18} className="transform group-hover:translate-x-1 transition-transform" />
-                                    </button>
-                                </form>
-                            </>
-                        )}
-                    </div>
-
-                    <div className="mt-8 pt-6 border-t border-dashed border-slate-300 flex justify-center">
-                        <div className="text-[10px] font-black text-slate-400 tracking-[0.3em] uppercase opacity-50">
-                            * Confirm your booking at the counter
-                        </div>
-                    </div>
-                </div>
-
-                {/* Close Button */}
-                <button
-                    onClick={onClose}
-                    className="absolute top-4 right-4 md:top-8 md:right-8 w-10 h-10 bg-white shadow-xl rounded-full border border-slate-200 flex items-center justify-center text-slate-400 hover:text-red-500 transition-all z-50 group"
-                >
-                    <X size={20} className="group-hover:rotate-90 transition-transform" />
-                </button>
-            </div>
-        );
-    }
+    const isDestination = type === "destinations";
+    const isVisa = type === "visa";
+    const title = item.name || item.country;
+    const priceText = isVisa ? `₹ ${item.cost}` : (item.price || item.cost);
+    const idPrefix = type.toUpperCase().substring(0, 4);
+    const boardingPassId = `${idPrefix}-${(title || "TRIP").substring(0, 3).toUpperCase()}-${Math.floor(Math.random() * 1000)}`;
 
     return (
-        <>
-            <div className="relative w-full md:w-1/2 h-56 sm:h-64 md:h-auto overflow-hidden shrink-0">
-                <img
-                    src={item.image}
-                    alt={item.name || item.country}
-                    className="w-full h-full object-cover"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent md:hidden" />
-                <h3 className="absolute bottom-4 left-4 text-3xl font-bold text-white md:hidden">
-                    {item.name || item.country}
-                </h3>
-            </div>
+        <div className="flex flex-col md:flex-row w-full relative overflow-y-auto md:overflow-hidden bg-white md:rounded-3xl scrollbar-hide">
+            {/* Sticky Close Button (Inside) */}
+            <button
+                onClick={onClose}
+                className="sticky top-4 right-4 ml-auto mr-4 -mt-10 md:absolute md:top-8 md:right-8 w-10 h-10 bg-white shadow-xl rounded-full border border-slate-200 flex items-center justify-center text-slate-400 hover:text-red-500 transition-all z-[110] group"
+            >
+                <X size={20} className="group-hover:rotate-90 transition-transform" />
+            </button>
+            {/* Visual Cutouts for Ticket Effect */}
+            <div className="hidden md:block absolute left-[66%] -top-[20px] w-10 h-10 bg-black/60 rounded-full z-20 pointer-events-none" />
+            <div className="hidden md:block absolute left-[66%] -bottom-[20px] w-10 h-10 bg-black/60 rounded-full z-20 pointer-events-none" />
 
-            <div className={`w-full md:w-1/2 p-6 md:p-10 flex flex-col relative overflow-y-auto max-h-[50vh] md:max-h-full ${type === 'visa' ? 'bg-slate-50' : 'bg-white'}`}>
-                <button
-                    onClick={(e) => { e.stopPropagation(); onClose(); }}
-                    className="absolute top-4 right-4 text-gray-600 bg-white/50 backdrop-blur-md border border-slate-200 hover:bg-gray-100/50 rounded-full transition-all p-2 z-10"
-                >
-                    <X size={20} strokeWidth={2} />
-                </button>
-
-                <div className="hidden md:block mb-6 pr-8">
-                    <h3 className={`text-4xl font-bold mb-2 ${type === 'visa' ? 'text-[#151794]' : 'text-bookease-navy'}`}>
-                        {item.name || item.country}
-                    </h3>
-                    {type === "visa" && (
-                        <span className="inline-block px-3 py-1 bg-blue-100/50 text-blue-800 font-bold text-sm rounded-full tracking-wide">
-                            {item.visaType}
-                        </span>
-                    )}
-                    {type === "destinations" && item.popularDestination && (
-                        <span className="inline-block bg-red-100 text-red-600 px-2 py-0.5 rounded text-xs font-bold uppercase tracking-wider mb-1">
-                            Popular Destination
-                        </span>
-                    )}
+            {/* Left Section: Main Ticket Body */}
+            <div className="w-full md:w-2/3 p-4 md:p-10 flex flex-col border-b-2 md:border-b-0 md:border-r-2 border-dashed border-slate-200 md:overflow-y-auto scrollbar-hide h-auto">
+                {/* Header */}
+                <div className="flex justify-between items-start mb-8 border-b-2 border-slate-100 pb-6 shrink-0">
+                    <div className="flex items-center gap-4">
+                        <div className="w-12 h-12 bg-[#151794] rounded-2xl flex items-center justify-center text-white shadow-lg transform -rotate-12">
+                            {isVisa ? <FileCheck size={24} className="transform rotate-12" /> : <Plane size={24} className="transform rotate-45" />}
+                        </div>
+                        <div>
+                            <h3 className="text-xl font-black text-[#151794] uppercase tracking-tighter">Khaleefa Holidays</h3>
+                            <p className="text-[10px] font-bold text-slate-400 tracking-[0.2em] uppercase">
+                                {isVisa ? "Priority Visa Service" : "Premium Destination"}
+                            </p>
+                        </div>
+                    </div>
                 </div>
 
-                <div className={`grid gap-5 text-base flex-grow ${type === 'visa' ? 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3' : 'grid-cols-1'}`}>
+                <div className="relative rounded-3xl overflow-hidden aspect-[16/9] mb-8 group shrink-0">
+                    <img src={item.image} alt={`${title} - Khaleefa Holidays Service Gallery`} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-[#151794]/80 via-transparent to-transparent" />
 
-                    <div className={type === 'visa' ? "flex flex-col gap-5" : "space-y-6"}>
-                        {type === "visa" ? (
-                            <div className="space-y-3">
-                                <h4 className="flex items-center gap-2 text-slate-800 font-bold text-base">
-                                    <span className="w-1.5 h-1.5 bg-[#151794] rounded-full" /> Visa Details
-                                </h4>
-                                <div className="bg-white rounded-2xl border border-slate-100 shadow-sm divide-y divide-slate-50">
-                                    <div className="p-3.5 flex justify-between items-center transition-colors hover:bg-slate-50/50">
-                                        <p className="text-slate-400 text-[10px] font-black uppercase tracking-widest">Price</p>
-                                        <p className="font-extrabold text-[#151794] text-lg">₹ {item.cost}</p>
-                                    </div>
-                                    <div className="p-3.5 flex justify-between items-center transition-colors hover:bg-slate-50/50">
-                                        <p className="text-slate-400 text-[10px] font-black uppercase tracking-widest">Processing</p>
-                                        <p className="font-bold text-slate-700 text-base">{item.processingDays} Days</p>
-                                    </div>
-                                    <div className="p-3.5 flex justify-between items-center transition-colors hover:bg-slate-50/50">
-                                        <p className="text-slate-400 text-[10px] font-black uppercase tracking-widest">Validity</p>
-                                        <p className="font-bold text-slate-700 text-base">{item.validity} Days</p>
-                                    </div>
+                    <div className="absolute bottom-6 left-6 pr-6">
+                        <h2 className="text-3xl md:text-4xl font-black text-white uppercase tracking-tight leading-none drop-shadow-lg">
+                            {title}
+                        </h2>
+                        {/* Category - Under Country Name */}
+                        {(isVisa && item.category) && (
+                            <p className="mt-1 text-white/90 text-sm font-bold uppercase tracking-[0.2em] drop-shadow-md flex items-center gap-2">
+                                <span className="w-4 h-[2px] bg-white/60" />
+                                {item.category}
+                            </p>
+                        )}
+                        {(isDestination && item.popularDestination) && (
+                            <p className="mt-1 text-white/90 text-sm font-bold uppercase tracking-[0.2em] drop-shadow-md flex items-center gap-2">
+                                <span className="w-4 h-[2px] bg-white/60" />
+                                Premium Journey
+                            </p>
+                        )}
+                    </div>
+                </div>
+
+                {/* Contact Section - MOVED FROM RIGHT, Hidden on Mobile */}
+                {!isDestination && (
+                    <div className="hidden md:block mb-8 space-y-4">
+                        <div className="flex flex-col sm:flex-row gap-4">
+                            <div className="flex-1 bg-white rounded-2xl border border-slate-100 shadow-sm p-4 flex justify-between items-center">
+                                <div>
+                                    <p className="text-slate-400 text-[9px] font-black uppercase tracking-widest">Support Agent</p>
+                                    <p className="font-extrabold text-[#151794] text-base uppercase">{contactPerson}</p>
+                                </div>
+                                <div className="w-[1px] h-8 bg-slate-100 mx-4 hidden sm:block" />
+                                <div className="text-right">
+                                    <p className="text-slate-400 text-[9px] font-black uppercase tracking-widest">Mobile No</p>
+                                    <p className="font-extrabold text-[#151794] text-base">{contactNumber}</p>
                                 </div>
                             </div>
-                        ) : (
-                            <div className="space-y-1">
-                                <p className="text-gray-500 text-xs uppercase tracking-wider font-bold">Price</p>
-                                <p className="font-bold text-bookease-navy text-2xl">
-                                    {(item.price || item.cost)}
-                                </p>
-                            </div>
-                        )}
+                        </div>
 
-                        {type === "destinations" && item.description && (
-                            <div className="space-y-1">
-                                <p className="text-gray-500 text-xs uppercase tracking-wider font-bold">Description</p>
-                                <p className="text-gray-700 leading-relaxed whitespace-pre-wrap">{item.description}</p>
-                            </div>
-                        )}
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                            <button
+                                onClick={() => window.open(`https://wa.me/91${contactNumber}?text=${encodeURIComponent(whatsappText)}`, '_blank')}
+                                className="w-full bg-[#25D366] text-white py-3.5 rounded-2xl text-xs font-black uppercase tracking-widest transition-all duration-300 transform hover:-translate-y-1 hover:shadow-2xl active:translate-y-1 shadow-[0_10px_30px_rgba(37,211,102,0.2)] flex items-center justify-center gap-3"
+                            >
+                                <MessageSquare size={16} />
+                                WhatsApp Us
+                            </button>
+                            <button
+                                onClick={() => window.location.href = `tel:${contactNumber}`}
+                                className="w-full bg-[#151794] text-white py-3.5 rounded-2xl text-xs font-black uppercase tracking-widest transition-all duration-300 transform hover:-translate-y-1 hover:shadow-2xl active:translate-y-1 shadow-[0_10px_30px_rgba(21,23,148,0.2)] flex sm:hidden items-center justify-center gap-3"
+                            >
+                                <Phone size={16} />
+                                Call Direct
+                            </button>
+                        </div>
+                    </div>
+                )}
+            </div>
 
-                        {type === "rooms" && (
-                            <div className="space-y-1">
-                                <p className="text-gray-500 text-xs uppercase tracking-wider font-bold">Amenities</p>
-                                <p className="font-medium text-gray-800">{item.amenities}</p>
-                            </div>
-                        )}
+            {/* Right Section: Ticket Stub / Enquiry or Contact Details */}
+            <div className="w-full md:w-1/3 bg-slate-50 p-6 md:p-10 flex flex-col md:overflow-y-auto scrollbar-hide h-auto">
+                <div className="mb-6">
+                    <p className="text-[10px] font-black text-slate-400 tracking-[0.2em] uppercase mb-1">
+                        {isVisa ? "Service Type" : "Service Info"}
+                    </p>
+                    <h4 className="font-black text-xl text-[#151794] uppercase tracking-tighter break-words">
+                        {isVisa ? item.visaType : "Destination"}
+                    </h4>
+                </div>
 
-                        {type === "cab" && (
-                            <div className="space-y-1">
-                                <p className="text-gray-500 text-xs uppercase tracking-wider font-bold">Features</p>
-                                <p className="font-medium text-gray-800">{item.features}</p>
-                            </div>
-                        )}
-
-                        {type !== "visa" && (
-                            <div className="space-y-1 bg-gray-50 p-4 rounded-xl border border-gray-100">
-                                <p className="text-gray-500 text-xs uppercase tracking-wider font-bold mb-1">Contact Support</p>
-                                <p className="font-bold text-gray-900 text-lg">{item.contactNumber || "9846223028"}</p>
-                                <p className="text-sm text-gray-500">{item.contactPerson || "Muhammed"}</p>
+                {/* Ticket Details List - REPLACING CARD STRUCTURE */}
+                <div className="mb-8">
+                    <p className="text-[#151794] text-[11px] font-black uppercase tracking-widest mb-4 flex items-center gap-2">
+                        {isVisa ? "Visa Details" : "Journey Details"}
+                    </p>
+                    <div className="space-y-4 px-1">
+                        <div className="flex justify-between items-center border-b border-slate-200 pb-2">
+                            <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Price</span>
+                            <span className="font-extrabold text-[#151794] text-base">{priceText}</span>
+                        </div>
+                        <div className="flex justify-between items-center border-b border-slate-200 pb-2">
+                            <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">
+                                {isVisa ? "Processing" : "Duration"}
+                            </span>
+                            <span className="font-extrabold text-slate-600 text-sm uppercase">
+                                {isVisa ? `${item.processingDays} Days` : (item.duration || "5 Days")}
+                            </span>
+                        </div>
+                        <div className="flex justify-between items-center border-b border-slate-200 pb-2">
+                            <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">
+                                {isVisa ? "Validity" : "Availability"}
+                            </span>
+                            <span className="font-extrabold text-slate-600 text-sm uppercase">
+                                {isVisa ? (item.validity || "90 Days") : "Instant"}
+                            </span>
+                        </div>
+                        {isVisa && (
+                            <div className="flex justify-between items-center border-b border-slate-200 pb-2">
+                                <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Visa Type</span>
+                                <span className="font-extrabold text-slate-600 text-sm uppercase">{item.visaType}</span>
                             </div>
                         )}
                     </div>
+                </div>
 
-                    {type === "visa" && (
+                {/* Details Section - MOVED FROM LEFT */}
+                <div className="mb-8">
+                    <p className="text-slate-400 text-[10px] font-black uppercase tracking-widest mb-4">
+                        {isVisa ? "Visa Requirements" : "Overview"}
+                    </p>
+                    <div className="bg-white/50 p-5 rounded-2xl border border-slate-200/50 relative overflow-hidden">
+                        {isVisa ? (
+                            <ul className="space-y-2 relative z-10">
+                                {(item.requirements?.length > 0 ? item.requirements : ["Passport", "Photo"])
+                                    .filter((req: string) => req.trim() !== "")
+                                    .map((req: string, i: number) => (
+                                        <li key={i} className="flex items-start gap-2.5 text-slate-600 font-medium text-xs">
+                                            <div className="mt-1.5 w-1 h-1 rounded-full bg-[#151794] flex-shrink-0 opacity-60" />
+                                            <span className="leading-snug">{req}</span>
+                                        </li>
+                                    ))}
+                            </ul>
+                        ) : (
+                            <p className="text-slate-600 leading-relaxed text-xs italic whitespace-pre-wrap relative z-10">
+                                {item.description || (type === "rooms" ? item.amenities : item.features)}
+                            </p>
+                        )}
+                    </div>
+                </div>
+
+                <div className="flex-grow">
+                    {submitted ? (
+                        <div className="flex flex-col items-center justify-center py-6 text-center">
+                            <div className="w-14 h-14 bg-green-100 rounded-full flex items-center justify-center mb-4">
+                                <CheckCircle2 size={28} className="text-green-600" />
+                            </div>
+                            <h4 className="text-lg font-black text-[#151794] uppercase tracking-tight mb-2">Thank You!</h4>
+                            <p className="text-slate-600 text-sm">We&apos;ve received your enquiry and will get back to you shortly.</p>
+                        </div>
+                    ) : (
                         <>
-                            <div className="space-y-3 h-full flex flex-col">
-                                <h4 className="flex items-center gap-2 text-slate-800 font-bold text-base">
-                                    <CheckCircle2 size={16} className="text-[#151794]" /> Requirements
-                                </h4>
-                                <div className="bg-white rounded-2xl p-4 border border-slate-100 shadow-sm h-full max-h-[350px] md:max-h-full overflow-y-auto w-full">
-                                    <ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-x-4 gap-y-2">
-                                        {(item.requirements?.length > 0 ? item.requirements : ["Passport", "Photo"])
-                                            .filter((req: string) => req.trim() !== "")
-                                            .map((req: string, i: number) => (
-                                                <li key={i} className="flex items-start gap-2.5 text-slate-600 font-medium text-xs">
-                                                    <div className="mt-1 w-1 h-1 rounded-full bg-[#151794] flex-shrink-0 opacity-60" />
-                                                    <span className="leading-snug">{req}</span>
-                                                </li>
-                                            ))}
-                                    </ul>
-                                </div>
-                            </div>
-
-                            <div className="space-y-3">
-                                <h4 className="flex items-center gap-2 text-slate-800 font-bold text-base">
-                                    <Phone size={16} className="text-[#151794]" /> Contact Info
-                                </h4>
-                                <div className="bg-white rounded-2xl border border-slate-100 shadow-sm divide-y divide-slate-50 overflow-hidden">
-                                    <div className="p-3.5 flex justify-between items-center transition-colors hover:bg-slate-50/50">
-                                        <p className="text-slate-400 text-[10px] font-black uppercase tracking-widest">Person</p>
-                                        <p className="font-extrabold text-[#151794] text-base uppercase line-clamp-1">{item.contactPerson || "Support"}</p>
-                                    </div>
-                                    <div className="p-3.5 flex flex-col gap-3">
-                                        <div className="flex justify-between items-center">
-                                            <p className="text-slate-400 text-[10px] font-black uppercase tracking-widest">Number</p>
-                                            <p className="font-extrabold text-[#151794] text-base">{item.contactNumber || "9846223028"}</p>
+                            {isDestination && (
+                                <>
+                                    <p className="text-[#151794] text-[11px] font-black uppercase tracking-widest mb-6 flex items-center gap-2">
+                                        <MessageSquare size={14} /> Quick Enquiry
+                                    </p>
+                                    <form onSubmit={handleEnquirySubmit} className="space-y-4">
+                                        <div className="space-y-1">
+                                            <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest px-1">Passenger Name</label>
+                                            <input required type="text" value={formData.name} onChange={e => setFormData({ ...formData, name: e.target.value })} className="w-full px-5 py-3.5 bg-white border border-slate-200 rounded-2xl focus:ring-2 focus:ring-[#151794]/20 outline-none text-sm font-bold uppercase transition-all" placeholder="YOUR NAME" />
                                         </div>
-                                        <button
-                                            onClick={(e) => {
-                                                e.stopPropagation();
-                                                window.location.href = `tel:${item.contactNumber || "9846223028"}`;
-                                            }}
-                                            className="w-full bg-[#151794] text-white py-2.5 rounded-xl font-bold text-sm flex items-center justify-center gap-2 transition-all hover:bg-[#151794]/90 active:scale-[0.98] shadow-sm"
-                                        >
-                                            <Phone size={14} fill="currentColor" />
-                                            Call Now
+                                        <div className="space-y-1">
+                                            <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest px-1">Mobile No</label>
+                                            <input required type="tel" value={formData.phone} onChange={e => { setFormData({ ...formData, phone: e.target.value }); setPhoneError(""); }} className={`w-full px-5 py-3.5 bg-white border rounded-2xl focus:ring-2 focus:ring-[#151794]/20 outline-none text-sm font-bold uppercase transition-all ${phoneError ? "border-red-400" : "border-slate-200"}`} placeholder="+91 0000 0000" />
+                                            {phoneError && <p className="text-red-500 text-xs mt-1">{phoneError}</p>}
+                                        </div>
+                                        <div className="space-y-1">
+                                            <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest px-1">Enquiry Note</label>
+                                            <textarea required rows={3} value={formData.enquiry} onChange={e => setFormData({ ...formData, enquiry: e.target.value })} className="w-full px-5 py-3.5 bg-white border border-slate-200 rounded-2xl focus:ring-2 focus:ring-[#151794]/20 outline-none text-sm font-medium resize-none transition-all" placeholder="Tell us about your trip..." />
+                                        </div>
+
+                                        <button type="submit" className="w-full bg-[#151794] text-white px-8 py-4 rounded-2xl text-sm font-black uppercase tracking-widest transition-all duration-300 transform hover:-translate-y-1 hover:shadow-2xl active:translate-y-1 shadow-[0_10px_30px_rgba(21,23,148,0.2)] flex items-center justify-center gap-3 group mt-4">
+                                            Confirm Enquiry
+                                            <Plane size={18} className="transform group-hover:translate-x-1 transition-transform" />
                                         </button>
-                                    </div>
-                                </div>
-                            </div>
+                                    </form>
+                                </>
+                            )}
                         </>
                     )}
                 </div>
 
-                {type === "destinations" ? (
-                    <div className="mt-6 flex-grow flex flex-col justify-end">
-                        {submitted ? (
-                            <div className="flex flex-col items-center justify-center py-6 text-center">
-                                <div className="w-14 h-14 bg-green-100 rounded-full flex items-center justify-center mb-4">
-                                    <CheckCircle2 size={28} className="text-green-600" />
-                                </div>
-                                <h4 className="text-lg font-bold text-gray-800 mb-2">Thank You!</h4>
-                                <p className="text-gray-600 text-sm">We&apos;ve received your enquiry and will get back to you shortly.</p>
-                            </div>
-                        ) : (
-                            <>
-                                <h4 className="text-lg font-bold text-gray-800 mb-4">Send an Enquiry</h4>
-                                <form onSubmit={handleEnquirySubmit} className="space-y-4">
-                                    <div>
-                                        <label className="block text-sm font-medium text-gray-700 mb-1">Name</label>
-                                        <input required type="text" value={formData.name} onChange={e => setFormData({ ...formData, name: e.target.value })} className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-bookease-navy outline-none" placeholder="Your Name" />
-                                    </div>
-                                    <div>
-                                        <label className="block text-sm font-medium text-gray-700 mb-1">Phone</label>
-                                        <input required type="tel" value={formData.phone} onChange={e => { setFormData({ ...formData, phone: e.target.value }); setPhoneError(""); }} className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-bookease-navy outline-none ${phoneError ? "border-red-400" : "border-gray-300"}`} placeholder="Your Phone Number" />
-                                        {phoneError && <p className="text-red-500 text-xs mt-1">{phoneError}</p>}
-                                    </div>
-                                    <div>
-                                        <label className="block text-sm font-medium text-gray-700 mb-1">Enquiry</label>
-                                        <textarea required rows={3} value={formData.enquiry} onChange={e => setFormData({ ...formData, enquiry: e.target.value })} className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-bookease-navy outline-none" placeholder="Tell us what you're looking for..." />
-                                    </div>
 
-                                    <button type="submit" className="w-full bg-[#151794] text-white font-bold py-4 px-10 rounded-full text-lg mt-4 border-2 border-[#151794] transition-all duration-200 transform hover:-translate-y-[2px] active:translate-y-[4px] shadow-[0_4px_0_#0a0b5c,0_10px_15px_rgba(0,0,0,0.3)] active:shadow-[0_0px_0_#0a0b5c,0_0px_0px_rgba(0,0,0,0)] focus:outline-none">
-                                        Submit Enquiry
-                                    </button>
-                                </form>
-                            </>
-                        )}
+
+                {/* Mobile Contact Section - Visible only on Mobile */}
+                {!isDestination && (
+                    <div className="block md:hidden mt-10 space-y-6 pt-10 border-t-2 border-slate-200">
+                        <div className="flex flex-col gap-4">
+                            <div className="bg-white rounded-3xl border border-slate-100 shadow-sm p-5 flex justify-between items-center">
+                                <div>
+                                    <p className="text-slate-400 text-[10px] font-black uppercase tracking-widest">Support Agent</p>
+                                    <p className="font-ex-bold text-[#151794] text-lg uppercase">{contactPerson}</p>
+                                </div>
+                                <div className="text-right">
+                                    <p className="text-slate-400 text-[10px] font-black uppercase tracking-widest">Mobile No</p>
+                                    <p className="font-ex-bold text-[#151794] text-lg leading-tight">{contactNumber}</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div className="grid grid-cols-1 gap-4">
+                            <button
+                                onClick={() => window.open(`https://wa.me/91${contactNumber}?text=${encodeURIComponent(whatsappText)}`, '_blank')}
+                                className="w-full bg-[#25D366] text-white py-5 rounded-[2rem] text-xs font-black uppercase tracking-[0.2em] shadow-[0_15px_40px_rgba(37,211,102,0.3)] flex items-center justify-center gap-4 active:scale-95 transition-all"
+                            >
+                                <MessageSquare size={18} />
+                                WhatsApp Us
+                            </button>
+                            <button
+                                onClick={() => window.location.href = `tel:${contactNumber}`}
+                                className="w-full bg-[#151794] text-white py-5 rounded-[2rem] text-xs font-black uppercase tracking-[0.2em] shadow-[0_15px_40px_rgba(21,23,148,0.3)] flex items-center justify-center gap-4 active:scale-95 transition-all"
+                            >
+                                <Phone size={18} />
+                                Call Direct
+                            </button>
+                        </div>
                     </div>
-                ) : (
-                    <button
-                        className="w-full mt-8 bg-[#25D366] text-white font-bold py-4 px-10 rounded-full text-lg flex flex-row items-center justify-center gap-2 border-2 border-[#1da851] transition-all duration-200 transform hover:-translate-y-[2px] active:translate-y-[4px] shadow-[0_4px_0_#188c43,0_10px_15px_rgba(0,0,0,0.3)] active:shadow-[0_0px_0_#188c43,0_0px_0px_rgba(0,0,0,0)] focus:outline-none"
-                        onClick={(e) => {
-                            e.stopPropagation();
-                            window.open(`https://wa.me/91${contactNumber}?text=${encodeURIComponent(whatsappText)}`, '_blank');
-                        }}
-                    >
-                        <MessageSquare size={20} />
-                        Connect on WhatsApp
-                    </button>
                 )}
             </div>
-        </>
+
+        </div >
     );
 }

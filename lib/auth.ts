@@ -32,8 +32,8 @@ export async function login(formData: FormData) {
     const email = formData.get("email");
     const password = formData.get("password");
 
-    // Default credentials: admin / admin123
-    if (email === "admin" && password === "admin123") {
+    // Default credentials: admin / admin@khaleefa6009
+    if (email === "admin" && password === "admin@khaleefa6009") {
         const user = { email: "admin", name: "Admin User" };
 
         // Create the session

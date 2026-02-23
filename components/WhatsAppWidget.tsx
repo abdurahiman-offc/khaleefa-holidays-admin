@@ -8,7 +8,8 @@ export default function WhatsAppWidget() {
 
     useEffect(() => {
         const toggleVisibility = () => {
-            if (window.scrollY > 300) {
+            const isModalOpen = document.body.style.overflow === 'hidden';
+            if (window.scrollY > 300 && !isModalOpen) {
                 setIsVisible(true);
             } else {
                 setIsVisible(false);
@@ -16,7 +17,14 @@ export default function WhatsAppWidget() {
         };
 
         window.addEventListener("scroll", toggleVisibility);
-        return () => window.removeEventListener("scroll", toggleVisibility);
+        // Initial check and also observe body style changes
+        const observer = new MutationObserver(toggleVisibility);
+        observer.observe(document.body, { attributes: true, attributeFilter: ['style'] });
+
+        return () => {
+            window.removeEventListener("scroll", toggleVisibility);
+            observer.disconnect();
+        };
     }, []);
 
     return (

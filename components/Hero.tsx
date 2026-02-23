@@ -38,31 +38,34 @@ export default function Hero() {
                         transition={{ duration: 0.8, ease: "easeOut" }}
                         className="bg-transparent"
                     >
-                        {/* Mobile Caption */}
-                        <h1 className={`block md:hidden text-5xl font-extrabold text-white mb-3 tracking-[-0.04em] leading-[1.05] ${outfit.className}`}>
-                            Bringing the World <br />
-                            <span className="text-blue-200">Within Reach</span>
-                        </h1>
+                        {/* Responsive H1 for SEO (Only one H1 per page) */}
+                        <div className="flex flex-col items-center lg:items-start">
+                            <h1 className="sr-only">Khaleefa Holidays - Bringing the World Within Reach</h1>
 
-                        {/* Desktop/Tablet Title */}
-                        <div className={`hidden md:flex flex-col items-center lg:items-start tracking-tight drop-shadow-2xl bg-transparent ${dancingScript.className}`}>
-                            <h1 className="text-6xl sm:text-7xl md:text-8xl lg:text-[7.5rem] xl:text-[9rem] font-bold text-white bg-transparent leading-[0.85] relative z-10 w-full">
-                                Khaleefa
-                            </h1>
-                            <h2 className="text-5xl sm:text-6xl md:text-7xl lg:text-[6.5rem] xl:text-[8rem] text-blue-100 bg-transparent relative z-0 leading-[0.85] mt-2 w-full lg:ml-12">
-                                Holidays
-                            </h2>
+                            {/* Visual Presentation (using aria-hidden to avoid screen reader duplication) */}
+                            <div aria-hidden="true" className="block md:hidden text-5xl font-extrabold text-white mb-3 tracking-[-0.04em] leading-[1.05] font-sans">
+                                Bringing the World <br />
+                                <span className="text-blue-200">Within Reach</span>
+                            </div>
+
+                            <div aria-hidden="true" className={`hidden md:flex flex-col items-center lg:items-start tracking-tight drop-shadow-2xl bg-transparent ${dancingScript.className}`}>
+                                <div className="text-6xl sm:text-7xl md:text-8xl lg:text-[7.5rem] xl:text-[9rem] font-bold text-white bg-transparent leading-[0.85] relative z-10 w-full">
+                                    Khaleefa
+                                </div>
+                                <div className="text-5xl sm:text-6xl md:text-7xl lg:text-[6.5rem] xl:text-[8rem] text-blue-100 bg-transparent relative z-0 leading-[0.85] mt-2 w-full lg:ml-12">
+                                    Holidays
+                                </div>
+                            </div>
                         </div>
                     </motion.div>
 
-                    <motion.p
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.8, delay: 0.3 }}
+                    <p
                         className={`max-w-xl text-lg sm:text-xl md:text-2xl text-blue-50/90 leading-relaxed drop-shadow-md bg-transparent w-full ${dosis.className}`}
                     >
                         Uncover secluded shores and hidden gems. Experience the world&apos;s most breathtaking destinations with zero hassle.
-                    </motion.p>
+                    </p>
+
+                    {/* ... (buttons remain same, skipping for space in replace but I'll make sure to be careful) ... */}
 
                     <motion.div
                         initial={{ opacity: 0, y: 30 }}
@@ -172,7 +175,7 @@ export default function Hero() {
                         >
                             <Image
                                 src="/images/bg22.png"
-                                alt="Hero Foreground"
+                                alt="Khaleefa Holidays Travel Experience"
                                 fill
                                 className="object-contain drop-shadow-[0_30px_50px_rgba(0,0,0,0.6)] scale-125 md:scale-150 lg:scale-[1.6]"
                                 priority

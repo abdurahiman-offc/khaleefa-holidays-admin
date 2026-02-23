@@ -21,7 +21,7 @@ export default function AboutUs() {
                     >
                         <Image
                             src="https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?q=80&w=2021&auto=format&fit=crop"
-                            alt="Traveler looking at mountains"
+                            alt="Breathtaking travel destination curated by Khaleefa Holidays"
                             fill
                             className="object-cover hover:scale-105 transition-transform duration-700"
                         />
@@ -43,9 +43,9 @@ export default function AboutUs() {
                         <h2 className="text-sm font-bold text-white uppercase tracking-widest mb-4">
                             About Us
                         </h2>
-                        <h3 className="text-4xl md:text-6xl font-bold text-white mb-6 leading-tight font-[family-name:var(--font-yomogi)]">
+                        <h2 className="text-4xl md:text-6xl font-bold text-white mb-6 leading-tight font-[family-name:var(--font-yomogi)]">
                             We Turn Your Dream Vacations Into Reality
-                        </h3>
+                        </h2>
                         <p className="text-lg text-white/80 mb-8 leading-relaxed">
                             At Khalifa Holidays, we believe travel is more than just moving from place to place—it's about the memories you create and the experiences that shape you.
                             Born from a passion for exploration, we specialize in crafting personalized journeys that cater to your unique desires.
