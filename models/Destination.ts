@@ -28,6 +28,14 @@ const DestinationSchema = new Schema(
             type: String,
             default: "5 Days",
         },
+        supportAgent: {
+            type: String,
+            default: "Muhammed",
+        },
+        supportNumber: {
+            type: String,
+            default: "9846223028",
+        },
     },
     { timestamps: true }
 );

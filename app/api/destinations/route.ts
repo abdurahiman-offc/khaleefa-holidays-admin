@@ -1,9 +1,11 @@
+import { verifyAuth } from "@/lib/auth";
 
 import dbConnect from "@/lib/db";
 import Destination from "@/models/Destination";
 import { NextResponse } from "next/server";
 
 export async function GET() {
+    if (!(await verifyAuth())) return NextResponse.json({ success: false, message: "Unauthorized" }, { status: 401 });
     await dbConnect();
     try {
         const destinations = await Destination.find({});
@@ -14,6 +16,7 @@ export async function GET() {
 }
 
 export async function POST(request: Request) {
+    if (!(await verifyAuth())) return NextResponse.json({ success: false, message: "Unauthorized" }, { status: 401 });
     await dbConnect();
     try {
         const body = await request.json();

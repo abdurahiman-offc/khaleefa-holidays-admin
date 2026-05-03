@@ -31,7 +31,7 @@ export default function FAQ() {
     const [openIndex, setOpenIndex] = useState<number | null>(null);
 
     return (
-        <section id="faq" className="pt-[100px] pb-[100px] bg-white ">
+        <section id="faq" className="pt-[100px] pb-[100px] bg-[#F5F5F5]">
             <div className="container mx-auto px-6 max-w-3xl">
                 <motion.div
                     initial={{ opacity: 0, y: 20 }}
@@ -40,7 +40,7 @@ export default function FAQ() {
                     transition={{ duration: 0.6 }}
                     className="text-center mb-16"
                 >
-                    <h2 className="text-3xl md:text-4xl font-bold text-bookease-navy  mb-4">
+                    <h2 className="text-2xl md:text-3xl font-black mb-4 uppercase tracking-[0.2em] bg-clip-text text-transparent bg-gradient-to-r from-[#18189C] to-black">
                         Frequently Asked Questions
                     </h2>
                     <p className="text-lg text-slate-600 ">
@@ -48,7 +48,7 @@ export default function FAQ() {
                     </p>
                 </motion.div>
 
-                <div className="space-y-4">
+                <div className="space-y-6">
                     {faqs.map((faq, index) => (
                         <motion.div
                             key={index}
@@ -56,7 +56,7 @@ export default function FAQ() {
                             whileInView={{ opacity: 1, y: 0 }}
                             viewport={{ once: true }}
                             transition={{ duration: 0.4, delay: index * 0.1 }}
-                            className="border border-slate-200  rounded-xl overflow-hidden"
+                            className="bg-[#F5F5F5] rounded-[32px] shadow-[0_10px_25px_rgba(0,0,0,0.08),_0_4px_10px_rgba(0,0,0,0.05)] border-[10px] border-white overflow-hidden"
                         >
                             <button
                                 onClick={() => setOpenIndex(openIndex === index ? null : index)}

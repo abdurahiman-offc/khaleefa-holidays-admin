@@ -2,164 +2,132 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { Menu, X } from "lucide-react";
-import { motion, AnimatePresence } from "framer-motion";
-import Image from "next/image";
 
 export default function Navbar() {
     const pathname = usePathname();
     const [isScrolled, setIsScrolled] = useState(false);
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-    const [isVisible, setIsVisible] = useState(true);
-    const [lastScrollY, setLastScrollY] = useState(0);
-    const [isPastHero, setIsPastHero] = useState(false);
+    const [activeSection, setActiveSection] = useState("hero");
+
+    const navLinks = [
+        { name: "Home", id: "hero" },
+        { name: "Visa", id: "services" },
+        { name: "Popular destination", id: "destinations" },
+        { name: "Partner with Us", id: "b2b" },
+        { name: "Contact Us", id: "contact" },
+    ];
 
     useEffect(() => {
         const handleScroll = () => {
-            const currentScrollY = window.scrollY;
-            setIsScrolled(currentScrollY > 50);
-            setIsPastHero(currentScrollY > 20); // Hide almost immediately when scrolling starts
+            setIsScrolled(window.scrollY > 50);
 
-            if (currentScrollY > lastScrollY && currentScrollY > 100) {
-                setIsVisible(false);
-            } else if (currentScrollY < lastScrollY) {
-                setIsVisible(true);
+            // Detect active section
+            const scrollPos = window.scrollY + 150;
+            let current = "hero";
+
+            for (const link of navLinks) {
+                const element = document.getElementById(link.id);
+                if (element) {
+                    const top = element.offsetTop;
+                    const height = element.offsetHeight;
+                    if (scrollPos >= top && scrollPos < top + height) {
+                        current = link.id;
+                        break;
+                    }
+                }
             }
-            setLastScrollY(currentScrollY);
+            setActiveSection(current);
         };
-
         window.addEventListener("scroll", handleScroll, { passive: true });
+        handleScroll();
         return () => window.removeEventListener("scroll", handleScroll);
-    }, [lastScrollY]);
+    }, []);
 
     if (pathname.startsWith("/admin")) return null;
 
-    const navLinks = [
-        { name: "Services", id: "services" },
-        { name: "Destinations", id: "destinations" },
-        { name: "Reviews", id: "reviews" },
-        { name: "About Us", id: "about-us" },
-        { name: "B2B", id: "b2b" },
-    ];
-
     const scrollToSection = (id: string) => {
         const el = document.getElementById(id);
-        if (el) el.scrollIntoView({ behavior: "smooth" });
+        if (el) {
+            const offset = 80;
+            const bodyRect = document.body.getBoundingClientRect().top;
+            const elementRect = el.getBoundingClientRect().top;
+            const elementPosition = elementRect - bodyRect;
+            const offsetPosition = elementPosition - offset;
+
+            window.scrollTo({
+                top: id === "hero" ? 0 : offsetPosition,
+                behavior: "smooth"
+            });
+            setActiveSection(id);
+        }
         setIsMobileMenuOpen(false);
     };
 
     return (
         <nav
-            className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${isScrolled
-                ? "md:bg-white/80 md:backdrop-blur-md py-4 md:shadow-sm"
-                : "bg-transparent py-6"
-                } ${!isVisible ? "-translate-y-full opacity-0 md:translate-y-0 md:opacity-100" : "translate-y-0 opacity-100"}`}
+            className={`fixed top-0 left-0 right-0 z-50 ${isScrolled ? "bg-white/90 backdrop-blur-md py-4 shadow-sm" : "bg-transparent py-8"
+                }`}
         >
             <div className="container mx-auto px-6 flex items-center justify-between">
                 {/* Logo */}
-                <Link href="/" className="flex items-center">
-                    {/* Desktop Logo */}
-                    <div className="hidden md:block relative w-48 h-12 md:w-56 md:h-14">
+                <Link href="/" className="flex items-center gap-2">
+                    <div className="relative w-[180px] h-[50px]">
                         <Image
-                            src={isScrolled ? "/images/desktopnav2.png" : "/images/mainlogo2.png"}
+                            src="/images/mainlogo-1"
                             alt="Khaleefa Holidays Logo"
                             fill
-                            className="object-contain object-left"
-                            priority
-                        />
-                    </div>
-                    {/* Mobile Logo */}
-                    <div className={`block md:hidden relative w-64 h-20 transition-all duration-500 ${isPastHero ? "opacity-0 scale-95 pointer-events-none" : "opacity-100 scale-100"}`}>
-                        <Image
-                            src="/images/mobilenav.png"
-                            alt="Khaleefa Holidays Logo"
-                            fill
+                            sizes="(max-width: 768px) 180px, 180px"
                             className="object-contain object-left"
                             priority
                         />
                     </div>
                 </Link>
 
-                {/* Desktop Navigation */}
-                <div className="hidden md:flex items-center space-x-8">
+                {/* Navigation Menus */}
+                <div className="hidden lg:flex items-center space-x-8 nav-menu-desktop">
                     {navLinks.map((link) => (
                         <button
                             key={link.name}
                             type="button"
                             onClick={() => scrollToSection(link.id)}
-                            className={`relative py-1 text-sm font-medium transition-colors after:absolute after:bottom-0 after:left-0 after:h-[2px] after:w-0 hover:after:w-full after:transition-all after:duration-300 ${isScrolled ? "text-slate-600 hover:text-bookease-navy after:bg-bookease-navy" : "text-white/90 hover:text-white after:bg-white"
+                            className={`transition-all text-[13px] font-black uppercase tracking-[0.2em] ${activeSection === link.id
+                                ? "text-[#18189C] underline underline-offset-8 decoration-2"
+                                : "text-[#2D3E33] hover:text-[#18189C] hover:underline underline-offset-8 decoration-2"
                                 }`}
                         >
                             {link.name}
                         </button>
                     ))}
-                    <button
-                        type="button"
-                        onClick={() => scrollToSection("contact")}
-                        className="bg-bookease-navy hover:bg-bookease-slate text-white px-8 py-3 rounded-full font-bold text-lg transition-all shadow-md hover:shadow-xl hover:-translate-y-1 active:scale-95 border-2 border-white"
-                    >
-                        Contact Us
-                    </button>
                 </div>
 
                 {/* Mobile Menu Button */}
                 <button
-                    className="md:hidden relative z-50 w-12 h-12 flex flex-col items-center justify-center gap-1.5 transition-all outline-none group"
+                    className="lg:hidden text-[#18189C] nav-hamburger-btn"
                     onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-                    aria-label="Toggle Menu"
                 >
-                    {/* Round Background */}
-                    <div className={`absolute inset-0 rounded-full border-2 border-white transition-all duration-300 ${isScrolled || isMobileMenuOpen ? "bg-[#151794] shadow-lg scale-100" : "bg-transparent scale-0"}`} />
-
-                    <motion.span
-                        animate={isMobileMenuOpen ? { rotate: 45, y: 8 } : { rotate: 0, y: 0 }}
-                        transition={{ duration: 0.3, ease: "easeInOut" }}
-                        className="w-6 h-0.5 rounded-full bg-white relative z-10"
-                    />
-                    <motion.span
-                        animate={isMobileMenuOpen ? { opacity: 0, x: -10 } : { opacity: 1, x: 0 }}
-                        transition={{ duration: 0.2 }}
-                        className="w-6 h-0.5 rounded-full bg-white relative z-10"
-                    />
-                    <motion.span
-                        animate={isMobileMenuOpen ? { rotate: -45, y: -8 } : { rotate: 0, y: 0 }}
-                        transition={{ duration: 0.3, ease: "easeInOut" }}
-                        className="w-6 h-0.5 rounded-full bg-white relative z-10"
-                    />
+                    {isMobileMenuOpen ? <X size={28} /> : <Menu size={28} />}
                 </button>
             </div>
 
             {/* Mobile Menu Overlay */}
-            <AnimatePresence>
-                {isMobileMenuOpen && (
-                    <motion.div
-                        initial={{ opacity: 0, y: -20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        exit={{ opacity: 0, y: -20 }}
-                        className="absolute top-full left-0 right-0 bg-[#151794]/95 backdrop-blur-xl shadow-lg p-6 md:hidden flex flex-col gap-4 border-t border-white/10"
-                    >
-                        {navLinks.map((link) => (
-                            <button
-                                key={link.name}
-                                type="button"
-                                onClick={() => scrollToSection(link.id)}
-                                className="text-lg font-bold text-white text-left w-full py-4 px-4 hover:bg-white/10 rounded-2xl transition-all active:scale-[0.98]"
-                            >
-                                {link.name}
-                            </button>
-                        ))}
+            {isMobileMenuOpen && (
+                <div className="absolute top-full left-0 right-0 bg-[#F5F5F5] shadow-xl p-8 lg:hidden flex flex-col gap-6 nav-mobile-overlay">
+                    {navLinks.map((link) => (
                         <button
+                            key={link.name}
                             type="button"
-                            onClick={() => scrollToSection("contact")}
-                            className="text-lg font-bold text-white text-left w-full py-4 px-4 mt-2 border-t border-white/10 hover:bg-white/10 rounded-2xl transition-all active:scale-[0.98]"
+                            onClick={() => scrollToSection(link.id)}
+                            className={`text-xl font-black uppercase tracking-widest text-left ${activeSection === link.id ? "text-[#18189C] underline" : "text-[#2D3E33]"
+                                }`}
                         >
-                            Contact Us
+                            {link.name}
                         </button>
-
-                    </motion.div>
-                )}
-            </AnimatePresence>
+                    ))}
+                </div>
+            )}
         </nav>
     );
 }

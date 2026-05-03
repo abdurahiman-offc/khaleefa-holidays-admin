@@ -3,20 +3,14 @@
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import { MoveRight, X, User, Phone, MessageSquare, Plane, CheckCircle2 } from "lucide-react";
-import Link from "next/link";
 import { useState, useEffect } from "react";
 import { isValidPhone, PHONE_ERROR_MESSAGE } from "@/lib/utils";
-import ScatteredShapes from "./ScatteredShapes";
-import { Dosis, Satisfy } from "next/font/google";
+import SectionBackground from "./SectionBackground";
+import { Dosis } from "next/font/google";
 
 const dosis = Dosis({
     subsets: ["latin"],
-    weight: ["400", "700"],
-});
-
-const satisfy = Satisfy({
-    subsets: ["latin"],
-    weight: ["400"],
+    weight: ["400", "500", "700"],
 });
 
 export default function ExploreB2B() {
@@ -45,7 +39,6 @@ export default function ExploreB2B() {
             setPhoneError(PHONE_ERROR_MESSAGE);
             return;
         }
-        // Save to DB
         try {
             await fetch("/api/submissions", {
                 method: "POST",
@@ -65,57 +58,64 @@ export default function ExploreB2B() {
         setFormData({ name: "", phone: "", message: "" });
     };
 
+    // Body scroll lock on modal open
+    useEffect(() => {
+        if (isModalOpen) {
+            document.body.style.overflow = 'hidden';
+        } else {
+            document.body.style.overflow = 'unset';
+        }
+        return () => { document.body.style.overflow = 'unset'; };
+    }, [isModalOpen]);
+
     return (
-        <section id="b2b" className="pt-[100px] pb-7 md:pb-[100px] bg-[#151794] relative overflow-hidden">
-            {/* Background Effect */}
-            <ScatteredShapes />
+        <section id="b2b" className={`py-[80px] md:py-[120px] bg-[#F5F5F5] relative transition-colors duration-300 ${isModalOpen ? 'z-[100]' : 'z-10'}`}>
+            <SectionBackground />
 
             <div className="container mx-auto px-6 relative z-10">
-                <div onClick={() => setIsModalOpen(true)} className="block group cursor-pointer">
+                <div className="flex flex-col lg:flex-row items-center gap-12 lg:gap-20">
+                    {/* Left Side: Image */}
                     <motion.div
-                        className="bg-transparent overflow-hidden relative border-[10px] border-white rounded-[40px] transition-all duration-500"
-                        whileHover={{ scale: 0.98 }}
+                        initial={{ opacity: 0, scale: 0.95 }}
+                        whileInView={{ opacity: 1, scale: 1 }}
+                        viewport={{ once: true }}
+                        transition={{ duration: 0.8 }}
+                        className="w-full lg:w-1/2 relative order-2 lg:order-1"
                     >
-                        <div className="absolute top-0 right-0 w-[800px] h-[800px] bg-blue-500/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/3 pointer-events-none" />
-                        <div className="absolute bottom-0 left-0 w-[600px] h-[600px] bg-indigo-500/10 rounded-full blur-3xl translate-y-1/2 -translate-x-1/3 pointer-events-none" />
+                        <div className="relative aspect-square rounded-[40px] overflow-hidden">
+                            <Image
+                                src="/images/b2b-2.png"
+                                alt="Khaleefa Holidays B2B Travel Partnership Opportunities"
+                                fill
+                                className="object-cover transition-transform duration-1000 hover:scale-105"
+                            />
+                        </div>
+                    </motion.div>
 
-                        <div className="flex flex-col items-center justify-center relative min-h-[400px] lg:min-h-[550px]">
-                            {/* Background Image */}
-                            <div className="absolute inset-0 z-0">
-                                <Image
-                                    src="https://images.unsplash.com/39/lIZrwvbeRuuzqOoWJUEn_Photoaday_CSD%20%281%20of%201%29-5.jpg?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-                                    alt="Khaleefa Holidays B2B Travel Partnership Opportunities"
-                                    fill
-                                    className="object-cover"
-                                    priority
-                                />
-                                {/* Initial Black Overlay (0.8 Opacity) */}
-                                <div className="absolute inset-0 bg-black/80 transition-opacity duration-500 group-hover:opacity-0" />
-
-                                {/* Hover Black Overlay (0.9 Opacity) */}
-                                <div className="absolute inset-0 bg-black/90 opacity-0 group-hover:opacity-100 transition-all duration-500 flex items-center justify-center">
-                                    <div className={`text-white text-4xl lg:text-5xl font-bold flex items-center gap-4 text-center px-4 opacity-0 scale-95 group-hover:opacity-100 group-hover:scale-100 transition-all duration-500 delay-100 ${satisfy.className}`}>
-                                        Click to Reach Us
-                                        <MoveRight className="w-10 h-10 lg:w-12 lg:h-12" />
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div className="w-full lg:w-3/4 p-8 lg:p-20 relative z-10 text-center lg:text-left transition-opacity duration-500 group-hover:opacity-0">
-                                <motion.div
-                                    initial={{ opacity: 0, x: -20 }}
-                                    whileInView={{ opacity: 1, x: 0 }}
-                                    viewport={{ once: true }}
-                                    transition={{ duration: 0.6 }}
-                                >
-                                    <h2 className={`text-4xl md:text-[42px] font-normal text-white mb-4 md:mb-6 leading-tight ${satisfy.className}`}>
-                                        Let's join hand together
-                                    </h2>
-                                    <p className={`text-2xl md:text-3xl lg:text-[46px] text-white/90 mb-0 leading-relaxed max-w-2xl font-medium ${dosis.className}`}>
-                                        Explore B2B opportunity with Khaleefa Holiday. Join our exclusive network of travel partners.
-                                    </p>
-                                </motion.div>
-                            </div>
+                    {/* Right Side: Content */}
+                    <motion.div
+                        initial={{ opacity: 0, x: 50 }}
+                        whileInView={{ opacity: 1, x: 0 }}
+                        viewport={{ once: true }}
+                        transition={{ duration: 0.8 }}
+                        className="w-full lg:w-1/2 text-left order-1 lg:order-2"
+                    >
+                        <h2 className="text-3xl md:text-4xl lg:text-5xl font-black mb-6 uppercase tracking-[0.2em] bg-clip-text text-transparent bg-gradient-to-r from-[#18189C] to-black">
+                            Let's join hand together
+                        </h2>
+                        <p className={`text-xl md:text-2xl lg:text-3xl text-black/60 leading-relaxed mb-10 normal-case ${dosis.className} font-medium italic`}>
+                            Explore B2B opportunity with Khaleefa Holiday. Join our exclusive network of travel partners and grow your business with us.
+                        </p>
+                        
+                        <div className="relative group/btn w-fit">
+                            <div className="absolute -inset-1 bg-black rounded-full transform translate-x-1 translate-y-1 group-hover/btn:translate-x-0 group-hover/btn:translate-y-0 transition-transform" />
+                            <button
+                                onClick={() => setIsModalOpen(true)}
+                                className="relative bg-[#18189C] text-white px-10 py-4 rounded-full border-2 border-black text-sm font-black uppercase tracking-widest flex items-center gap-3"
+                            >
+                                Partner with Us
+                                <MoveRight className="w-5 h-5" />
+                            </button>
                         </div>
                     </motion.div>
                 </div>
@@ -124,7 +124,7 @@ export default function ExploreB2B() {
             {/* Enquiry Modal */}
             <AnimatePresence>
                 {isModalOpen && (
-                    <div className="fixed inset-0 z-50 flex items-center justify-center px-4 pt-20 pb-10">
+                    <div className="fixed inset-0 z-[110] flex items-center justify-center px-4 pt-20 pb-10">
                         {/* Backdrop */}
                         <motion.div
                             initial={{ opacity: 0 }}
@@ -140,90 +140,144 @@ export default function ExploreB2B() {
                             animate={{ opacity: 1, scale: 1, y: 0 }}
                             exit={{ opacity: 0, scale: 0.95, y: 20 }}
                             transition={{ type: "spring", duration: 0.5 }}
-                            className="bg-white rounded-3xl shadow-2xl w-full max-w-lg relative z-10 overflow-hidden"
+                            className="bg-[#F5F5F5] rounded-[40px] shadow-[0_10px_25px_rgba(0,0,0,0.08),_0_4px_10px_rgba(0,0,0,0.05)] w-full max-w-4xl relative z-10 overflow-hidden text-[#18189C] border-[10px] border-white flex flex-col md:flex-row min-h-[500px]"
                         >
-                            {/* Header */}
-                            <div className="bg-[#151794] p-6 text-white relative flex justify-between items-center">
-                                <div>
-                                    <h3 className="text-2xl font-bold mb-1">B2B Partnership</h3>
-                                    <p className="text-white/80 text-sm">Join our exclusive network</p>
-                                </div>
-                                <button
-                                    onClick={(e) => { e.stopPropagation(); setIsModalOpen(false); }}
-                                    className="p-2 hover:bg-white/20 rounded-full transition-colors relative z-20"
-                                >
-                                    <X size={24} />
-                                </button>
+                            {/* Visual Cutouts for Ticket Effect */}
+                            <div className="hidden md:block absolute left-[33%] -top-[20px] w-10 h-10 bg-white rounded-full z-20 pointer-events-none shadow-[inset_0_-4px_10px_rgba(0,0,0,0.05)]" />
+                            <div className="hidden md:block absolute left-[33%] -bottom-[20px] w-10 h-10 bg-white rounded-full z-20 pointer-events-none shadow-[inset_0_4px_10px_rgba(0,0,0,0.05)]" />
 
-                                {/* Decorative elements */}
-                                <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full blur-2xl -translate-y-1/2 translate-x-1/2" />
+                            {/* Sticky Close Button (Inside) */}
+                            <button
+                                onClick={() => setIsModalOpen(false)}
+                                className="absolute top-6 right-6 w-10 h-10 bg-white shadow-xl rounded-full border border-[#18189C]/10 flex items-center justify-center text-[#18189C] hover:text-red-500 transition-all z-[110] group"
+                            >
+                                <X size={20} className="group-hover:rotate-90 transition-transform" />
+                            </button>
+
+                            {/* Left Section: Partnership Branding (Stub) */}
+                            <div className="w-full md:w-1/3 bg-[#18189C] p-8 md:p-10 flex flex-col justify-between text-white border-b-2 md:border-b-0 md:border-r-2 border-dashed border-white/20">
+                                <div>
+                                    <div className="w-16 h-16 bg-white/20 backdrop-blur-md rounded-2xl flex items-center justify-center mb-8 shadow-inner transform -rotate-12">
+                                        <Plane size={32} className="transform rotate-45" />
+                                    </div>
+                                    <h3 className="text-3xl font-black uppercase tracking-tighter leading-none mb-4">B2B<br />Partner</h3>
+                                    <p className="text-white/60 text-[10px] font-black uppercase tracking-[0.1em] leading-relaxed max-w-[150px]">
+                                        Please fill out the form, and our team will contact you soon.
+                                    </p>
+                                </div>
+
+                                {/* Visual Barcode for Stub Effect */}
+                                <div className="mt-12 pt-6 border-t border-white/10 hidden md:block">
+                                    <div className="flex justify-between items-center text-[10px] font-mono text-white/20 tracking-widest uppercase mb-4">
+                                        <span>Partner ID</span>
+                                        <span>B2B-KH-2024</span>
+                                    </div>
+                                    <div className="flex gap-1 h-12 overflow-hidden opacity-30">
+                                        {[...Array(15)].map((_, i) => {
+                                            const width = Math.floor(Math.random() * 3) + 1;
+                                            const height = Math.floor(Math.random() * 40) + 60;
+                                            return (
+                                                <div
+                                                    key={i}
+                                                    className="bg-white rounded-[1px]"
+                                                    style={{
+                                                        width: `${width}px`,
+                                                        height: `${height}%`
+                                                    }}
+                                                />
+                                            );
+                                        })}
+                                    </div>
+                                </div>
                             </div>
 
-                            {/* Form or Thank You */}
-                            <div className="p-6 md:p-8 bg-slate-50 relative z-20" onClick={(e) => e.stopPropagation()}>
+                            {/* Right Section: Form Body */}
+                            <div className="w-full md:w-2/3 p-8 md:p-12 flex flex-col justify-center">
                                 {submitted ? (
-                                    <div className="flex flex-col items-center justify-center py-8 text-center">
-                                        <div className="w-14 h-14 bg-green-100 rounded-full flex items-center justify-center mb-4">
-                                            <CheckCircle2 size={28} className="text-green-600" />
+                                    <motion.div
+                                        initial={{ opacity: 0, scale: 0.9 }}
+                                        animate={{ opacity: 1, scale: 1 }}
+                                        className="flex flex-col items-center justify-center text-center py-10"
+                                    >
+                                        <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mb-6 shadow-sm">
+                                            <CheckCircle2 size={40} className="text-green-600" />
                                         </div>
-                                        <h4 className="text-xl font-bold text-[#151794] mb-2">Thank You!</h4>
-                                        <p className="text-gray-600 text-sm">We&apos;ve received your enquiry and will get back to you shortly.</p>
-                                    </div>
-                                ) : (
-                                    <form onSubmit={handleSubmit} className="space-y-4">
-                                        <div className="bg-white border-2 border-gray-100 rounded-xl p-3 focus-within:ring-1 focus-within:ring-[#151794] focus-within:border-[#151794] transition-all shadow-sm group">
-                                            <label className="flex items-center gap-2 text-[11px] font-bold text-gray-500 uppercase tracking-widest mb-1 group-focus-within:text-[#151794]">
-                                                <User size={14} /> Name
-                                            </label>
-                                            <input
-                                                type="text"
-                                                name="name"
-                                                value={formData.name}
-                                                onChange={handleChange}
-                                                required
-                                                className="w-full text-base font-bold text-gray-900 focus:outline-none bg-transparent placeholder-gray-400"
-                                                placeholder="Your name or company"
-                                            />
-                                        </div>
-
-                                        <div className={`bg-white border-2 rounded-xl p-3 focus-within:ring-1 focus-within:ring-[#151794] transition-all shadow-sm group ${phoneError ? "border-red-400 focus-within:border-red-400" : "border-gray-100 focus-within:border-[#151794]"}`}>
-                                            <label className="flex items-center gap-2 text-[11px] font-bold text-gray-500 uppercase tracking-widest mb-1 group-focus-within:text-[#151794]">
-                                                <Phone size={14} /> Phone
-                                            </label>
-                                            <input
-                                                type="tel"
-                                                name="phone"
-                                                value={formData.phone}
-                                                onChange={handleChange}
-                                                required
-                                                className="w-full text-base font-bold text-gray-900 focus:outline-none bg-transparent placeholder-gray-400"
-                                                placeholder="+91 00000 00000"
-                                            />
-                                            {phoneError && <p className="text-red-500 text-xs mt-1">{phoneError}</p>}
-                                        </div>
-
-                                        <div className="bg-white border-2 border-gray-100 rounded-xl p-3 focus-within:ring-1 focus-within:ring-[#151794] focus-within:border-[#151794] transition-all shadow-sm group">
-                                            <label className="flex items-center gap-2 text-[11px] font-bold text-gray-500 uppercase tracking-widest mb-1 group-focus-within:text-[#151794]">
-                                                <MessageSquare size={14} /> Enquiry
-                                            </label>
-                                            <textarea
-                                                name="message"
-                                                value={formData.message}
-                                                onChange={handleChange}
-                                                required
-                                                rows={3}
-                                                className="w-full text-base font-bold text-gray-900 focus:outline-none bg-transparent placeholder-gray-400 resize-none"
-                                                placeholder="How can we help you?"
-                                            />
-                                        </div>
-
+                                        <h4 className="text-2xl font-black uppercase tracking-tighter text-[#18189C] mb-3">Request Sent!</h4>
+                                        <p className="text-[#18189C]/60 text-sm font-black uppercase max-w-xs mx-auto">
+                                            Thank you for your interest. Our B2B team will contact you shortly.
+                                        </p>
                                         <button
-                                            type="submit"
-                                            className="w-full mt-4 bg-[#151794] text-white py-4 rounded-xl font-bold text-sm uppercase tracking-[0.2em] hover:bg-[#1a1cba] hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300 flex justify-center items-center gap-2 group shadow-md"
+                                            onClick={() => setIsModalOpen(false)}
+                                            className="mt-8 text-[#18189C] text-[10px] font-black uppercase tracking-[0.2em] border-b-2 border-[#18189C]/20 pb-1 hover:border-[#18189C] transition-all"
                                         >
-                                            Submit Enquiry <Plane size={16} className="transform group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
+                                            Return to Site
                                         </button>
-                                    </form>
+                                    </motion.div>
+                                ) : (
+                                    <div className="max-w-md mx-auto w-full">
+                                        <div className="mb-10">
+                                            <h4 className="text-2xl font-black uppercase tracking-tighter mb-2">Join the Elite</h4>
+                                            <p className="text-[#18189C]/40 text-xs font-black uppercase tracking-widest italic">Complete the enquiry to start your journey.</p>
+                                        </div>
+
+                                        <form onSubmit={handleSubmit} className="space-y-6">
+                                            <div className="space-y-1.5">
+                                                <label className="text-[10px] font-black text-[#18189C]/30 uppercase tracking-widest px-1 flex items-center gap-2">
+                                                    <User size={12} /> Full Name
+                                                </label>
+                                                <input
+                                                    required
+                                                    type="text"
+                                                    name="name"
+                                                    value={formData.name}
+                                                    onChange={handleChange}
+                                                    className="w-full px-5 py-4 bg-white border border-[#18189C]/10 rounded-2xl focus:ring-2 focus:ring-[#18189C]/10 outline-none text-sm font-black uppercase transition-all text-[#18189C] tracking-tight"
+                                                    placeholder="NAME / COMPANY"
+                                                />
+                                            </div>
+
+                                            <div className="space-y-1.5">
+                                                <label className="text-[10px] font-black text-[#18189C]/30 uppercase tracking-widest px-1 flex items-center gap-2">
+                                                    <Phone size={12} /> Mobile Number
+                                                </label>
+                                                <input
+                                                    required
+                                                    type="tel"
+                                                    name="phone"
+                                                    value={formData.phone}
+                                                    onChange={handleChange}
+                                                    className={`w-full px-5 py-4 bg-white border rounded-2xl focus:ring-2 focus:ring-[#18189C]/10 outline-none text-sm font-black uppercase transition-all text-[#18189C] tracking-tight ${phoneError ? "border-red-400" : "border-[#18189C]/10"}`}
+                                                    placeholder="+91 0000 0000"
+                                                />
+                                                {phoneError && <p className="text-red-500 text-[10px] mt-1 font-black px-1">{phoneError}</p>}
+                                            </div>
+
+                                            <div className="space-y-1.5">
+                                                <label className="text-[10px] font-black text-[#18189C]/30 uppercase tracking-widest px-1 flex items-center gap-2">
+                                                    <MessageSquare size={12} /> Partnership Note
+                                                </label>
+                                                <textarea
+                                                    required
+                                                    name="message"
+                                                    rows={3}
+                                                    value={formData.message}
+                                                    onChange={handleChange}
+                                                    className="w-full px-5 py-4 bg-white border border-[#18189C]/10 rounded-2xl focus:ring-2 focus:ring-[#18189C]/10 outline-none text-sm font-black uppercase resize-none transition-all text-[#18189C] tracking-tight"
+                                                    placeholder="Tell us about your business..."
+                                                />
+                                            </div>
+
+                                            <div className="relative group w-full pt-4">
+                                                <div className="absolute -inset-1 bg-black rounded-2xl transform translate-x-1 translate-y-1 group-hover:translate-x-0 group-hover:translate-y-0 transition-transform" />
+                                                <button
+                                                    type="submit"
+                                                    className="relative w-full bg-[#18189C] text-white px-8 py-4 rounded-2xl border-2 border-black text-sm font-black uppercase tracking-widest flex items-center justify-center gap-3 active:scale-[0.98] transition-all"
+                                                >
+                                                    Partner with us now
+                                                </button>
+                                            </div>
+                                        </form>
+                                    </div>
                                 )}
                             </div>
                         </motion.div>

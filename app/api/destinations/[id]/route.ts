@@ -1,3 +1,4 @@
+import { verifyAuth } from "@/lib/auth";
 
 import dbConnect from "@/lib/db";
 import Destination from "@/models/Destination";
@@ -7,8 +8,9 @@ export async function PUT(
     request: Request,
     { params }: { params: Promise<{ id: string }> }
 ) {
+    if (!(await verifyAuth())) return NextResponse.json({ success: false, message: "Unauthorized" }, { status: 401 });
     await dbConnect();
-    const { id } = await params; // Await params in Next.js 15+ (or recent 14 changes)
+    const { id } = await params;
     try {
         const body = await request.json();
         const destination = await Destination.findByIdAndUpdate(id, body, {
@@ -28,6 +30,7 @@ export async function DELETE(
     request: Request,
     { params }: { params: Promise<{ id: string }> }
 ) {
+    if (!(await verifyAuth())) return NextResponse.json({ success: false, message: "Unauthorized" }, { status: 401 });
     await dbConnect();
     const { id } = await params;
     try {

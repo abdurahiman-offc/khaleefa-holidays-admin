@@ -10,8 +10,8 @@ const VisaSchema = new Schema(
         visaType: {
             type: String,
             required: [true, "Please provide a visa type"],
-            enum: ["Tourist Visa", "Business Visa"],
-            default: "Tourist Visa",
+            enum: ["Tourist", "Business", "Job seeker", "Umrah", "Family"],
+            default: "Tourist",
         },
         category: {
             type: String,

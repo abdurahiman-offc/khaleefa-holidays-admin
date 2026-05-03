@@ -24,12 +24,12 @@ export default function DashboardLayout({
     }, [pathname]);
 
     const navLinks = [
-        { name: "Destinations", href: "/admin/destinations", icon: Map },
-        { name: "Visas", href: "/admin/visas", icon: Files },
-        { name: "Rooms", href: "/admin/rooms", icon: Hotel },
-        { name: "Cabs", href: "/admin/cabs", icon: Car },
-        { name: "Submissions", href: "/admin/submissions", icon: MessageSquare },
-        { name: "Feedback", href: "/admin/feedback", icon: Star },
+        { name: "Destinations", href: "/destinations", icon: Map },
+        { name: "Visas", href: "/visas", icon: Files },
+        { name: "Rooms", href: "/rooms", icon: Hotel },
+        { name: "Cabs", href: "/cabs", icon: Car },
+        { name: "Submissions", href: "/submissions", icon: MessageSquare },
+        { name: "Feedback", href: "/feedback", icon: Star },
     ];
 
     return (
@@ -123,7 +123,7 @@ export default function DashboardLayout({
                                 <Menu size={24} />
                             </button>
                             <h3 className="text-lg font-bold text-slate-800">
-                                {navLinks.find(l => pathname.startsWith(l.href))?.name || "Dashboard"}
+                                {navLinks.find(l => pathname === l.href || pathname.startsWith(l.href + "/"))?.name || "Dashboard"}
                             </h3>
                         </div>
                         <div className="flex items-center gap-4">

@@ -1,3 +1,4 @@
+import { verifyAuth } from "@/lib/auth";
 
 import dbConnect from "@/lib/db";
 import Cab from "@/models/Cab";
@@ -7,6 +8,7 @@ export async function PUT(
     request: Request,
     { params }: { params: Promise<{ id: string }> }
 ) {
+    if (!(await verifyAuth())) return NextResponse.json({ success: false, message: "Unauthorized" }, { status: 401 });
     await dbConnect();
     const { id } = await params;
     try {
@@ -28,6 +30,7 @@ export async function DELETE(
     request: Request,
     { params }: { params: Promise<{ id: string }> }
 ) {
+    if (!(await verifyAuth())) return NextResponse.json({ success: false, message: "Unauthorized" }, { status: 401 });
     await dbConnect();
     const { id } = await params;
     try {

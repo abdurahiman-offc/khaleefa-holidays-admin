@@ -34,7 +34,7 @@ export default function ScatteredShapes() {
                             key={shape.id}
                             animate={{ y: [0, -30, 0], x: [0, 20, 0], rotate: 360 }}
                             transition={{ duration: shape.duration, repeat: Infinity, delay: shape.delay, ease: "linear" }}
-                            className="absolute bg-white rounded-full backdrop-blur-sm"
+                            className="absolute bg-[#18189C] rounded-full backdrop-blur-sm"
                             style={{ top: shape.top, left: shape.left, width: shape.size, height: shape.size, opacity: shape.opacity }}
                         />
                     );
@@ -45,7 +45,7 @@ export default function ScatteredShapes() {
                             key={shape.id}
                             animate={{ y: [0, 30, 0], x: [0, -20, 0], rotate: -360 }}
                             transition={{ duration: shape.duration, repeat: Infinity, delay: shape.delay, ease: "linear" }}
-                            className="absolute bg-white backdrop-blur-sm rounded-sm"
+                            className="absolute bg-[#18189C] backdrop-blur-sm rounded-sm"
                             style={{ top: shape.top, left: shape.left, width: shape.size, height: shape.size, opacity: shape.opacity }}
                         />
                     );
@@ -56,7 +56,7 @@ export default function ScatteredShapes() {
                             key={shape.id}
                             animate={{ y: [0, -20, 0], x: [0, -30, 0], rotate: 360 }}
                             transition={{ duration: shape.duration, repeat: Infinity, delay: shape.delay, ease: "linear" }}
-                            className="absolute bg-white backdrop-blur-sm rounded-full"
+                            className="absolute bg-[#18189C] backdrop-blur-sm rounded-full"
                             style={{ top: shape.top, left: shape.left, width: shape.size * 1.5, height: shape.size * 0.5, opacity: shape.opacity }}
                         />
                     );
@@ -70,7 +70,7 @@ export default function ScatteredShapes() {
                             className="absolute flex items-center justify-center backdrop-blur-sm"
                             style={{ top: shape.top, left: shape.left, opacity: shape.opacity }}
                         >
-                            <svg width={shape.size} height={shape.size} viewBox="0 0 100 100" className="fill-white">
+                            <svg width={shape.size} height={shape.size} viewBox="0 0 100 100" className="fill-[#18189C]">
                                 <polygon points="50,0 100,100 0,100" />
                             </svg>
                         </motion.div>
@@ -85,8 +85,8 @@ export default function ScatteredShapes() {
                             className="absolute flex items-center justify-center backdrop-blur-sm"
                             style={{ top: shape.top, left: shape.left, width: shape.size, height: shape.size, opacity: shape.opacity }}
                         >
-                            <div className="absolute w-full h-[25%] bg-white rounded-sm" />
-                            <div className="absolute h-full w-[25%] bg-white rounded-sm" />
+                            <div className="absolute w-full h-[25%] bg-[#18189C] rounded-sm" />
+                            <div className="absolute h-full w-[25%] bg-[#18189C] rounded-sm" />
                         </motion.div>
                     );
                 }

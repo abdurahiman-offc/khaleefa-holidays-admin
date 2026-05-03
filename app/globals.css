@@ -1,15 +1,15 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
+  --background: #F0F4FF;
   --foreground: #171717;
-  /* Custom Colors for Khaleefa Holidays Theme */
-  --bookease-navy: #151794;
-  /* Primary Deep Blue */
-  --bookease-slate: #13147A;
-  /* Secondary Deep Blue */
-  --bookease-grey: #EEEFFB;
-  /* Light Background */
+  /* Custom Colors for Khaleefa Holidays Theme - Dark Night */
+  --bookease-navy: #18189C;
+  /* Primary Midnight Dark */
+  --bookease-slate: #111827;
+  /* Secondary Dark */
+  --bookease-grey: #1F2937;
+  /* Custom Grey */
 }
 
 @theme inline {
@@ -25,25 +25,35 @@
 
 
 
-html {
-  scroll-behavior: smooth;
+
+/* Scrollbar utilities */
+.hide-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 }
 
-/* Hide scrollbar for all elements */
-* {
-  -ms-overflow-style: none !important;
-  /* IE and Edge */
-  scrollbar-width: none !important;
-  /* Firefox */
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
 }
 
-/* Hide scrollbar for Chrome, Safari and Opera */
-*::-webkit-scrollbar {
-  display: none !important;
-  width: 0 !important;
-  height: 0 !important;
-  background: transparent !important;
-  -webkit-appearance: none !important;
+/* Custom scrollbar for admin and modals */
+.admin-scrollbar::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+.admin-scrollbar::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 10px;
+}
+
+.admin-scrollbar::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 10px;
+}
+
+.admin-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
 }
 
 body {
@@ -61,5 +71,76 @@ body {
   .container {
     padding-left: 1rem;
     padding-right: 1rem;
+  }
+}
+
+/* ==========================================================================
+   TABLET RESPONSIVENESS (768px - 1023px)
+   ========================================================================== */
+@media (min-width: 768px) and (max-width: 1023px) {
+
+  /* Navbar Adjustments */
+  .nav-menu-desktop {
+    display: none !important;
+  }
+
+  .nav-hamburger-btn {
+    display: block !important;
+  }
+
+  /* Hero Section Adjustments */
+  .hero-section {
+    padding-top: 5px !important;
+  }
+
+  .hero-motion-wrapper {
+    display: flex !important;
+    flex-direction: row !important;
+    flex-wrap: wrap !important;
+    align-items: center !important;
+    gap: 10px !important;
+    width: 100% !important;
+  }
+
+  .hero-header-image-wrapper-tablet {
+    display: block !important;
+    position: relative !important;
+    width: calc(50% - 5px) !important;
+    height: 550px !important;
+    flex-shrink: 0 !important;
+  }
+
+  .hero-heading {
+    font-size: 55px !important;
+    width: calc(50% - 5px) !important;
+    margin-bottom: 0 !important;
+    line-height: 1.1 !important;
+  }
+
+  .adventure-badge-tablet {
+    width: 80% !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+  }
+
+  .hero-buttons-tablet {
+    width: 100% !important;
+    display: flex !important;
+    justify-content: center !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  .hero-tablet-br {
+    display: block !important;
+  }
+
+  .hero-illustration-desktop {
+    display: none !important;
+  }
+
+  .hero-left-content {
+    width: 100% !important;
+    max-width: 100% !important;
   }
 }

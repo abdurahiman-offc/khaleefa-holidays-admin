@@ -29,7 +29,7 @@ export default function AdminLogin() {
             });
 
             if (res.ok) {
-                router.push("/admin");
+                router.push("/destinations");
             } else {
                 const data = await res.json();
                 setError(data.message || "Login failed");

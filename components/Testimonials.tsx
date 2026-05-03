@@ -2,67 +2,95 @@
 
 import { useState, useEffect, useRef } from "react";
 import { motion } from "framer-motion";
-import { Star } from "lucide-react";
-import Image from "next/image";
-import ScatteredShapes from "./ScatteredShapes";
+import { Star, User, Loader2 } from "lucide-react";
+import SectionBackground from "./SectionBackground";
 
-const testimonials = [
+interface Feedback {
+    _id?: string;
+    name: string;
+    place: string;
+    stars: number;
+    feedback: string;
+    createdAt?: string;
+}
+
+const fallbackTestimonials: Feedback[] = [
     {
         name: "Sarah Mitchell",
-        location: "New York, USA",
-        avatar: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?q=80&w=200&auto=format&fit=crop",
-        rating: 5,
-        text: "Bookease revolutionized how I plan my trips. The curated locations are simply breathtaking, and the booking process is seamless.",
+        place: "New York, USA",
+        stars: 5,
+        feedback: "Bookease revolutionized how I plan my trips. The curated locations are simply breathtaking, and the booking process is seamless.",
     },
     {
         name: "David Chen",
-        location: "Toronto, Canada",
-        avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=200&auto=format&fit=crop",
-        rating: 5,
-        text: "I've never had a smoother travel experience. The tailored itineraries were spot on for my family's needs.",
+        place: "Toronto, Canada",
+        stars: 5,
+        feedback: "I've never had a smoother travel experience. The tailored itineraries were spot on for my family's needs.",
     },
     {
         name: "Elena Rodriguez",
-        location: "Madrid, Spain",
-        avatar: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=200&auto=format&fit=crop",
-        rating: 4,
-        text: "Great app with amazing customer support. Highly recommend for anyone looking to explore new places without the hassle.",
+        place: "Madrid, Spain",
+        stars: 4,
+        feedback: "Great app with amazing customer support. Highly recommend for anyone looking to explore new places without the hassle.",
     },
     {
         name: "James Wilson",
-        location: "London, UK",
-        avatar: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?q=80&w=200&auto=format&fit=crop",
-        rating: 5,
-        text: "Absolutely incredible service. From visa processing to the actual tour, everything was handled professionally.",
+        place: "London, UK",
+        stars: 5,
+        feedback: "Absolutely incredible service. From visa processing to the actual tour, everything was handled professionally.",
     },
     {
         name: "Ananya Rao",
-        location: "Mumbai, India",
-        avatar: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?q=80&w=200&auto=format&fit=crop",
-        rating: 5,
-        text: "Khaleefa Holidays made our dream vacation a reality. Their attention to detail is unmatched in the industry.",
+        place: "Mumbai, India",
+        stars: 5,
+        feedback: "Khaleefa Holidays made our dream vacation a reality. Their attention to detail is unmatched in the industry.",
     },
     {
         name: "Marcus Weber",
-        location: "Berlin, Germany",
-        avatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?q=80&w=200&auto=format&fit=crop",
-        rating: 5,
-        text: "Fast, reliable, and premium. The B2B options are especially impressive for corporate travel needs.",
+        place: "Berlin, Germany",
+        stars: 5,
+        feedback: "Fast, reliable, and premium. The B2B options are especially impressive for corporate travel needs.",
     }
 ];
 
 export default function Testimonials() {
     const scrollRef = useRef<HTMLDivElement>(null);
+    const [feedbacks, setFeedbacks] = useState<Feedback[]>([]);
+    const [loading, setLoading] = useState(true);
     const [activeIndex, setActiveIndex] = useState(0);
 
-    // Duplicate testimonials for seamless loop on desktop
-    const doubledTestimonials = [...testimonials, ...testimonials];
+    useEffect(() => {
+        const fetchFeedbacks = async () => {
+            try {
+                const res = await fetch("/api/testimonials");
+                const data = await res.json();
+                if (data.success && data.data.length > 0) {
+                    setFeedbacks(data.data);
+                } else {
+                    setFeedbacks(fallbackTestimonials);
+                }
+            } catch (error) {
+                console.error("Failed to fetch feedbacks", error);
+                setFeedbacks(fallbackTestimonials);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchFeedbacks();
+    }, []);
+
+    // Duplicate feedbacks for seamless loop on desktop
+    const displayFeedbacks = feedbacks.length > 0 ? feedbacks : fallbackTestimonials;
+    const doubledFeedbacks = [...displayFeedbacks, ...displayFeedbacks];
 
     // Auto-swipe logic for mobile
     useEffect(() => {
+        if (displayFeedbacks.length === 0) return;
+
         const interval = setInterval(() => {
             if (scrollRef.current) {
-                const nextIndex = (activeIndex + 1) % testimonials.length;
+                const nextIndex = (activeIndex + 1) % displayFeedbacks.length;
                 const scrollAmount = scrollRef.current.offsetWidth * nextIndex;
 
                 scrollRef.current.scrollTo({
@@ -71,15 +99,23 @@ export default function Testimonials() {
                 });
                 setActiveIndex(nextIndex);
             }
-        }, 4000); // Swipe every 4 seconds
+        }, 4000);
 
         return () => clearInterval(interval);
-    }, [activeIndex]);
+    }, [activeIndex, displayFeedbacks.length]);
+
+    if (loading) {
+        return (
+            <section className="py-24 bg-white flex items-center justify-center">
+                <Loader2 className="w-8 h-8 animate-spin text-[#18189C]" />
+            </section>
+        );
+    }
 
     return (
-        <section id="reviews" className="pt-[100px] pb-7 md:pb-[100px] bg-[#151794] relative overflow-hidden">
-            {/* Scattered Small White Shapes */}
-            <ScatteredShapes />
+        <section id="reviews" className="pt-[100px] pb-7 md:pb-[100px] bg-[#F5F5F5] relative overflow-hidden contain-paint">
+            {/* Background Effect */}
+            <SectionBackground />
 
             <div className="relative z-10 pt-8">
                 <motion.div
@@ -89,133 +125,56 @@ export default function Testimonials() {
                     transition={{ duration: 0.6 }}
                     className="text-center mb-12 px-6"
                 >
-                    <h2 className="text-3xl md:text-5xl font-bold text-white mb-4 font-[family-name:var(--font-yomogi)]">
-                        Experiences from Our Adventurers
+                    <h2 className="text-2xl md:text-4xl font-black mb-4 uppercase tracking-[0.2em] bg-clip-text text-transparent bg-gradient-to-r from-[#18189C] to-black">
+                        Trusted Stories
                     </h2>
                 </motion.div>
 
                 {/* Desktop: Free Moving Carousel (Marquee) */}
-                <div className="hidden md:block relative overflow-hidden py-10">
-                    {/* Gradient Overlays for Fade Effect */}
-                    <div className="absolute inset-y-0 left-0 w-20 md:w-40 bg-gradient-to-r from-[#151794] to-transparent z-20 pointer-events-none" />
-                    <div className="absolute inset-y-0 right-0 w-20 md:w-40 bg-gradient-to-l from-[#151794] to-transparent z-20 pointer-events-none" />
+                <div className="hidden md:block relative overflow-hidden py-10 px-10">
+                    <div className="absolute inset-y-0 left-0 w-20 md:w-40 bg-gradient-to-r from-white to-transparent z-20 pointer-events-none" />
+                    <div className="absolute inset-y-0 right-0 w-20 md:w-40 bg-gradient-to-l from-white to-transparent z-20 pointer-events-none" />
 
-                    <motion.div
-                        className="flex gap-6 w-fit"
-                        animate={{
-                            x: [0, -1920], // Adjusted based on card width + gap
-                        }}
-                        transition={{
-                            duration: 40,
-                            repeat: Infinity,
-                            ease: "linear",
-                        }}
-                        style={{
-                            display: 'flex',
-                        }}
-                        whileHover={{ animationPlayState: 'paused' }}
-                    >
-                        {doubledTestimonials.map((testimonial, index) => (
-                            <div
-                                key={index}
-                                className="bg-white p-5 md:p-6 rounded-3xl shadow-lg border border-slate-100/50 w-[280px] md:w-[340px] flex-shrink-0 transition-transform duration-300 hover:scale-[1.02]"
-                            >
-                                <div className="flex items-center gap-3 md:gap-4 mb-4">
-                                    <div className="relative w-10 h-10 md:w-12 md:h-12 rounded-xl overflow-hidden shadow-sm">
-                                        <Image
-                                            src={testimonial.avatar}
-                                            alt={`${testimonial.name} - Verified Traveler at Khaleefa Holidays`}
-                                            fill
-                                            className="object-cover"
-                                        />
-                                    </div>
-                                    <div className="min-w-0">
-                                        <h4 className="font-bold text-bookease-navy text-sm md:text-base truncate">
-                                            {testimonial.name}
-                                        </h4>
-                                        <p className="text-[10px] md:text-xs text-slate-400 font-bold uppercase tracking-widest truncate">
-                                            {testimonial.location}
-                                        </p>
-                                    </div>
-                                </div>
-                                <div className="flex mb-3">
-                                    {[...Array(5)].map((_, i) => (
-                                        <Star
-                                            key={i}
-                                            size={12}
-                                            className={`${i < testimonial.rating
-                                                ? "text-yellow-400 fill-yellow-400"
-                                                : "text-gray-200"
-                                                }`}
-                                        />
-                                    ))}
-                                </div>
-                                <p className="text-slate-600 text-xs md:text-sm leading-relaxed line-clamp-4 italic border-l-2 border-[#151794]/10 pl-3">
-                                    &quot;{testimonial.text}&quot;
-                                </p>
-                            </div>
-                        ))}
-                    </motion.div>
+                    <div className="flex justify-center">
+                        <motion.div
+                            className="flex gap-10 w-fit"
+                            animate={displayFeedbacks.length > 3 ? {
+                                x: [0, -2500],
+                            } : {}}
+                            transition={{
+                                duration: 50,
+                                repeat: Infinity,
+                                ease: "linear",
+                            }}
+                            whileHover={{ animationPlayState: 'paused' }}
+                        >
+                            {(displayFeedbacks.length > 3 ? doubledFeedbacks : displayFeedbacks).map((item, index) => (
+                                <FeedbackCard key={index} item={item} />
+                            ))}
+                        </motion.div>
+                    </div>
                 </div>
 
-                {/* Mobile: Swipeable Carousel (Snap Scroller) */}
-                <div className="md:hidden relative px-6 py-6">
+                {/* Mobile View: Swipeable Carousel */}
+                <div className="md:hidden px-4">
                     <div
                         ref={scrollRef}
-                        className="flex overflow-x-auto gap-5 snap-x snap-mandatory scrollbar-hide pb-8"
+                        className="flex overflow-x-auto snap-x snap-mandatory scrollbar-hide gap-4 pb-8"
+                        style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
                     >
-                        {testimonials.map((testimonial, index) => (
-                            <motion.div
-                                key={index}
-                                initial={{ opacity: 0, x: 20 }}
-                                whileInView={{ opacity: 1, x: 0 }}
-                                transition={{ duration: 0.5, delay: index * 0.1 }}
-                                viewport={{ once: true }}
-                                className="bg-white p-6 rounded-3xl shadow-lg border border-slate-100/50 w-[85vw] flex-shrink-0 snap-center"
-                            >
-                                <div className="flex items-center gap-4 mb-4">
-                                    <div className="relative w-12 h-12 rounded-xl overflow-hidden shadow-sm">
-                                        <Image
-                                            src={testimonial.avatar}
-                                            alt={`${testimonial.name} - Happy Traveler with Khaleefa Holidays`}
-                                            fill
-                                            className="object-cover"
-                                        />
-                                    </div>
-                                    <div className="min-w-0">
-                                        <h4 className="font-bold text-bookease-navy text-sm truncate">
-                                            {testimonial.name}
-                                        </h4>
-                                        <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest truncate">
-                                            {testimonial.location}
-                                        </p>
-                                    </div>
-                                </div>
-                                <div className="flex mb-3">
-                                    {[...Array(5)].map((_, i) => (
-                                        <Star
-                                            key={i}
-                                            size={12}
-                                            className={`${i < testimonial.rating
-                                                ? "text-yellow-400 fill-yellow-400"
-                                                : "text-gray-200"
-                                                }`}
-                                        />
-                                    ))}
-                                </div>
-                                <p className="text-slate-600 text-xs leading-relaxed italic border-l-2 border-[#151794]/10 pl-3">
-                                    &quot;{testimonial.text}&quot;
-                                </p>
-                            </motion.div>
+                        {displayFeedbacks.map((item, index) => (
+                            <div key={index} className="w-full flex-shrink-0 snap-center">
+                                <FeedbackCard item={item} />
+                            </div>
                         ))}
                     </div>
 
-                    {/* Mobile Hint Dots */}
-                    <div className="flex justify-center gap-2 -mt-4">
-                        {testimonials.map((_, i) => (
+                    {/* Dots indicator */}
+                    <div className="flex justify-center gap-2">
+                        {displayFeedbacks.map((_, i) => (
                             <div
                                 key={i}
-                                className={`w-1.5 h-1.5 rounded-full transition-all duration-300 ${i === activeIndex ? "bg-white w-4" : "bg-white/20"
+                                className={`h-1.5 rounded-full transition-all duration-300 ${activeIndex === i ? "w-6 bg-[#18189C]" : "w-1.5 bg-[#18189C]/20"
                                     }`}
                             />
                         ))}
@@ -223,5 +182,38 @@ export default function Testimonials() {
                 </div>
             </div>
         </section>
+    );
+}
+
+function FeedbackCard({ item }: { item: Feedback }) {
+    return (
+        <motion.div
+            whileHover={{ y: -8 }}
+            className="relative flex flex-col bg-[#F5F5F5] p-8 rounded-[40px] shadow-[0_10px_25px_rgba(0,0,0,0.08),_0_4px_10px_rgba(0,0,0,0.05)] border-[10px] border-white h-full w-[300px] md:w-[380px] flex-shrink-0"
+        >
+            <div className="flex items-center gap-4 mb-6">
+                <div className="w-12 h-12 md:w-14 md:h-14 bg-[#F5F5F5] rounded-2xl flex items-center justify-center text-[#18189C] shrink-0 shadow-sm border border-slate-100">
+                    <User size={28} />
+                </div>
+                <div>
+                    <h4 className="font-bold text-slate-900 uppercase tracking-tight">{item.name}</h4>
+                    <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">{item.place}</p>
+                </div>
+            </div>
+
+            <div className="flex gap-1 mb-6">
+                {[...Array(5)].map((_, i) => (
+                    <Star
+                        key={i}
+                        size={14}
+                        className={i < item.stars ? "fill-[#FFB800] text-[#FFB800]" : "text-slate-200"}
+                    />
+                ))}
+            </div>
+
+            <p className="text-sm md:text-base text-slate-600 leading-relaxed font-medium italic">
+                "{item.feedback}"
+            </p>
+        </motion.div>
     );
 }
