@@ -11,10 +11,6 @@ const roboto = Roboto({
 export const metadata: Metadata = {
   title: "Admin Portal | Khaleefa Holidays",
   description: "Administrative dashboard for Khaleefa Holidays.",
-  icons: {
-    icon: "/images/footericon.png",
-    apple: "/images/footericon.png",
-  },
 };
 
 export default function RootLayout({
