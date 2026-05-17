@@ -121,6 +121,7 @@ export default function SubmissionsPage() {
                             <tr className="bg-slate-50 border-b border-gray-100">
                                 <th className="px-6 py-4 text-xs font-bold text-gray-400 uppercase tracking-widest">Type</th>
                                 <th className="px-6 py-4 text-xs font-bold text-gray-400 uppercase tracking-widest">Passenger / Contact</th>
+                                <th className="px-6 py-4 text-xs font-bold text-gray-400 uppercase tracking-widest">Phone</th>
                                 <th className="px-6 py-4 text-xs font-bold text-gray-400 uppercase tracking-widest">Enquiry Details</th>
                                 <th className="px-6 py-4 text-xs font-bold text-gray-400 uppercase tracking-widest">Date</th>
                                 <th className="px-6 py-4 text-xs font-bold text-gray-400 uppercase tracking-widest">Action</th>
@@ -140,14 +141,14 @@ export default function SubmissionsPage() {
                                         </div>
                                     </td>
                                     <td className="px-6 py-4">
-                                        <div className="flex flex-col">
-                                            <span className="text-sm font-bold text-gray-900 flex items-center gap-1.5">
-                                                <Users size={14} className="text-gray-400" /> {sub.name}
-                                            </span>
-                                            <span className="text-xs text-gray-500 flex items-center gap-1.5 mt-1">
-                                                <Phone size={12} className="text-gray-400" /> {sub.phone}
-                                            </span>
-                                        </div>
+                                        <span className="text-sm font-bold text-gray-900 flex items-center gap-1.5">
+                                            <Users size={14} className="text-gray-400" /> {sub.name}
+                                        </span>
+                                    </td>
+                                    <td className="px-6 py-4">
+                                        <span className="text-sm text-gray-600 flex items-center gap-1.5">
+                                            <Phone size={14} className="text-gray-400" /> {sub.phone}
+                                        </span>
                                     </td>
                                     <td className="px-6 py-4">
                                         <div className="max-w-xs">

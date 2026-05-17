@@ -196,7 +196,7 @@ export default function DestinationsPage() {
                                 className="object-cover"
                                 sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
                             />
-                            <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-3">
+                            <div className="absolute inset-0 bg-black/40 flex items-center justify-center gap-3">
                                 <button
                                     onClick={() => openModal(dest)}
                                     className="p-2 bg-white/20 hover:bg-white/40 text-white rounded-full backdrop-blur-sm transition"
